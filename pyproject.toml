@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "karaglof"
+version = "0.1.0"
+description = "KaraGLOF — GLOF susceptibility and warning-sign research prototype for the Karakoram (Hunza, Shimshal, Shigar)"
+readme = "README.md"
+requires-python = ">=3.11"
+# Runtime dependencies are pinned in requirements.txt (NFR-1) so Colab and CI
+# install exactly the same versions. Keep this list empty on purpose.
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

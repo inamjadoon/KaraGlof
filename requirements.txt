@@ -1,0 +1,27 @@
+# KaraGLOF pinned environment (NFR-1): every notebook must rerun top to bottom
+# on a fresh Colab session with these exact versions. Random seed is fixed at 42.
+#
+# Install with:  pip install -r requirements.txt && pip install -e .
+
+# --- Data handling ---
+pandas==2.2.3
+geopandas==1.0.1
+pyarrow==17.0.0
+
+# --- Models ---
+scikit-learn==1.5.2
+lightgbm==4.5.0
+shap==0.46.0
+
+# --- Earth Engine (Colab notebooks only; the server never calls EE) ---
+earthengine-api==1.1.2
+geemap==0.34.5
+
+# --- API ---
+fastapi==0.115.6
+uvicorn==0.32.1
+pydantic==2.10.3
+
+# --- Tests and quality ---
+pytest==8.3.4
+ruff==0.8.4
