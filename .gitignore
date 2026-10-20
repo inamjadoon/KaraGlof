@@ -1,0 +1,34 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# --- Node / web ---
+node_modules/
+web/dist/
+*.local
+
+# --- Data (large/interim files stay out of git; small released CSVs in api/data/ are committed) ---
+data/raw/
+data/interim/
+data/processed/
+*.parquet
+!api/data/**/*.parquet
+
+# --- Secrets and environments ---
+.env
+.env.*
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# --- Notebooks (Colab checkpoints) ---
+.ipynb_checkpoints/
