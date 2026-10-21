@@ -1,0 +1,131 @@
+{
+  "data_version": "data-v1",
+  "model_version": "model-0.1.0-sample",
+  "tier1": {
+    "split": {
+      "train": [
+        2000,
+        2017
+      ],
+      "validation": [
+        2018,
+        2019
+      ],
+      "test": [
+        2020,
+        2025
+      ]
+    },
+    "test_scored_once": true,
+    "no_skill_pr_auc": 0.04,
+    "models": [
+      {
+        "name": "logistic_baseline",
+        "pr_auc": 0.11,
+        "pr_auc_ci95": [
+          0.05,
+          0.2
+        ],
+        "recall_at_top10": 0.17,
+        "recall_at_top10_ci95": [
+          0.0,
+          0.45
+        ],
+        "brier": 0.041,
+        "brier_ci95": [
+          0.02,
+          0.07
+        ]
+      },
+      {
+        "name": "random_forest",
+        "pr_auc": 0.24,
+        "pr_auc_ci95": [
+          0.1,
+          0.43
+        ],
+        "recall_at_top10": 0.33,
+        "recall_at_top10_ci95": [
+          0.1,
+          0.65
+        ],
+        "brier": 0.038,
+        "brier_ci95": [
+          0.019,
+          0.064
+        ]
+      },
+      {
+        "name": "lightgbm",
+        "pr_auc": 0.31,
+        "pr_auc_ci95": [
+          0.15,
+          0.52
+        ],
+        "recall_at_top10": 0.5,
+        "recall_at_top10_ci95": [
+          0.22,
+          0.78
+        ],
+        "brier": 0.036,
+        "brier_ci95": [
+          0.018,
+          0.06
+        ]
+      }
+    ],
+    "ablation": {
+      "feature_group_removed": "glacier_surge",
+      "features": [
+        "velocity_prev",
+        "velocity_change",
+        "surge_flag_prev",
+        "dh_dt"
+      ],
+      "pr_auc_without_group": 0.22,
+      "pr_auc_without_group_ci95": [
+        0.09,
+        0.41
+      ],
+      "delta_pr_auc": -0.09,
+      "delta_pr_auc_ci95": [
+        -0.19,
+        0.02
+      ],
+      "note": "Sample-data placeholder; the real ablation is produced by notebook 04."
+    }
+  },
+  "tier2": {
+    "thresholds": {
+      "growth_2w_pct": 15.0,
+      "percentile_amber": 90.0,
+      "anomaly_amber_c": 2.0,
+      "percentile_red": 95.0,
+      "anomaly_red_c": 3.0
+    },
+    "thresholds_frozen_before_replay": true,
+    "cases": [
+      {
+        "case_id": "shisper-2022",
+        "lake_id": "KG-HUN-001",
+        "event_date": "2022-05-07",
+        "lead_time_days": 12,
+        "false_alarms": 0
+      },
+      {
+        "case_id": "khurdopin-2022",
+        "lake_id": "KG-SHM-001",
+        "event_date": "2022-07-15",
+        "lead_time_days": 18,
+        "false_alarms": 0
+      },
+      {
+        "case_id": "passu-2022",
+        "lake_id": "KG-HUN-002",
+        "event_date": null,
+        "lead_time_days": null,
+        "false_alarms": 2
+      }
+    ]
+  }
+}

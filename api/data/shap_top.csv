@@ -1,0 +1,181 @@
+lake_id,year,feature,value,shap,text
+KG-HUN-001,2020,area_growth_3y,10,0.09,Lake area grew 10% over the 3 years before this year
+KG-HUN-001,2020,surge_flag_prev,13,0.078,The parent glacier was surging the year before
+KG-HUN-001,2020,velocity_change,16.0,0.066,Glacier flow changed by 16.0 m/yr before this year
+KG-HUN-001,2020,heat_anomaly_prev,19.0,0.054,Last summer was 19.0 C warmer than the long-term mean
+KG-HUN-001,2020,pdd_prev_summer,22,0.042,Last summer had 22 positive degree-days (melt energy)
+KG-SHM-001,2020,area_growth_3y,10,0.042,Lake area grew 10% over the 3 years before this year
+KG-SHM-001,2020,surge_flag_prev,13,0.0364,The parent glacier was surging the year before
+KG-SHM-001,2020,velocity_change,16.0,0.0308,Glacier flow changed by 16.0 m/yr before this year
+KG-SHM-001,2020,heat_anomaly_prev,19.0,0.0252,Last summer was 19.0 C warmer than the long-term mean
+KG-SHM-001,2020,pdd_prev_summer,22,0.0196,Last summer had 22 positive degree-days (melt energy)
+KG-HUN-002,2020,area_growth_3y,10,0.03,Lake area grew 10% over the 3 years before this year
+KG-HUN-002,2020,surge_flag_prev,13,0.026,The parent glacier was surging the year before
+KG-HUN-002,2020,velocity_change,16.0,0.022,Glacier flow changed by 16.0 m/yr before this year
+KG-HUN-002,2020,heat_anomaly_prev,19.0,0.018,Last summer was 19.0 C warmer than the long-term mean
+KG-HUN-002,2020,pdd_prev_summer,22,0.014,Last summer had 22 positive degree-days (melt energy)
+KG-SHG-004,2020,area_growth_3y,10,0.024,Lake area grew 10% over the 3 years before this year
+KG-SHG-004,2020,surge_flag_prev,13,0.0208,The parent glacier was surging the year before
+KG-SHG-004,2020,velocity_change,16.0,0.0176,Glacier flow changed by 16.0 m/yr before this year
+KG-SHG-004,2020,heat_anomaly_prev,19.0,0.0144,Last summer was 19.0 C warmer than the long-term mean
+KG-SHG-004,2020,pdd_prev_summer,22,0.0112,Last summer had 22 positive degree-days (melt energy)
+KG-HUN-012,2020,area_growth_3y,10,0.018,Lake area grew 10% over the 3 years before this year
+KG-HUN-012,2020,surge_flag_prev,13,0.0156,The parent glacier was surging the year before
+KG-HUN-012,2020,velocity_change,16.0,0.0132,Glacier flow changed by 16.0 m/yr before this year
+KG-HUN-012,2020,heat_anomaly_prev,19.0,0.0108,Last summer was 19.0 C warmer than the long-term mean
+KG-HUN-012,2020,pdd_prev_summer,22,0.0084,Last summer had 22 positive degree-days (melt energy)
+KG-SHM-003,2020,area_growth_3y,10,0.015,Lake area grew 10% over the 3 years before this year
+KG-SHM-003,2020,surge_flag_prev,13,0.013,The parent glacier was surging the year before
+KG-SHM-003,2020,velocity_change,16.0,0.011,Glacier flow changed by 16.0 m/yr before this year
+KG-SHM-003,2020,heat_anomaly_prev,19.0,0.009,Last summer was 19.0 C warmer than the long-term mean
+KG-SHM-003,2020,pdd_prev_summer,22,0.007,Last summer had 22 positive degree-days (melt energy)
+KG-HUN-001,2021,area_growth_3y,10,0.108,Lake area grew 10% over the 3 years before this year
+KG-HUN-001,2021,surge_flag_prev,13,0.0936,The parent glacier was surging the year before
+KG-HUN-001,2021,velocity_change,16.0,0.0792,Glacier flow changed by 16.0 m/yr before this year
+KG-HUN-001,2021,heat_anomaly_prev,19.0,0.0648,Last summer was 19.0 C warmer than the long-term mean
+KG-HUN-001,2021,pdd_prev_summer,22,0.0504,Last summer had 22 positive degree-days (melt energy)
+KG-SHM-001,2021,area_growth_3y,10,0.057,Lake area grew 10% over the 3 years before this year
+KG-SHM-001,2021,surge_flag_prev,13,0.0494,The parent glacier was surging the year before
+KG-SHM-001,2021,velocity_change,16.0,0.0418,Glacier flow changed by 16.0 m/yr before this year
+KG-SHM-001,2021,heat_anomaly_prev,19.0,0.0342,Last summer was 19.0 C warmer than the long-term mean
+KG-SHM-001,2021,pdd_prev_summer,22,0.0266,Last summer had 22 positive degree-days (melt energy)
+KG-HUN-002,2021,area_growth_3y,10,0.033,Lake area grew 10% over the 3 years before this year
+KG-HUN-002,2021,surge_flag_prev,13,0.0286,The parent glacier was surging the year before
+KG-HUN-002,2021,velocity_change,16.0,0.0242,Glacier flow changed by 16.0 m/yr before this year
+KG-HUN-002,2021,heat_anomaly_prev,19.0,0.0198,Last summer was 19.0 C warmer than the long-term mean
+KG-HUN-002,2021,pdd_prev_summer,22,0.0154,Last summer had 22 positive degree-days (melt energy)
+KG-SHG-004,2021,area_growth_3y,10,0.0258,Lake area grew 10% over the 3 years before this year
+KG-SHG-004,2021,surge_flag_prev,13,0.0224,The parent glacier was surging the year before
+KG-SHG-004,2021,velocity_change,16.0,0.0189,Glacier flow changed by 16.0 m/yr before this year
+KG-SHG-004,2021,heat_anomaly_prev,19.0,0.0155,Last summer was 19.0 C warmer than the long-term mean
+KG-SHG-004,2021,pdd_prev_summer,22,0.012,Last summer had 22 positive degree-days (melt energy)
+KG-HUN-012,2021,area_growth_3y,10,0.0195,Lake area grew 10% over the 3 years before this year
+KG-HUN-012,2021,surge_flag_prev,13,0.0169,The parent glacier was surging the year before
+KG-HUN-012,2021,velocity_change,16.0,0.0143,Glacier flow changed by 16.0 m/yr before this year
+KG-HUN-012,2021,heat_anomaly_prev,19.0,0.0117,Last summer was 19.0 C warmer than the long-term mean
+KG-HUN-012,2021,pdd_prev_summer,22,0.0091,Last summer had 22 positive degree-days (melt energy)
+KG-SHM-003,2021,area_growth_3y,10,0.0174,Lake area grew 10% over the 3 years before this year
+KG-SHM-003,2021,surge_flag_prev,13,0.0151,The parent glacier was surging the year before
+KG-SHM-003,2021,velocity_change,16.0,0.0128,Glacier flow changed by 16.0 m/yr before this year
+KG-SHM-003,2021,heat_anomaly_prev,19.0,0.0104,Last summer was 19.0 C warmer than the long-term mean
+KG-SHM-003,2021,pdd_prev_summer,22,0.0081,Last summer had 22 positive degree-days (melt energy)
+KG-HUN-001,2022,area_growth_3y,10,0.123,Lake area grew 10% over the 3 years before this year
+KG-HUN-001,2022,surge_flag_prev,13,0.1066,The parent glacier was surging the year before
+KG-HUN-001,2022,velocity_change,16.0,0.0902,Glacier flow changed by 16.0 m/yr before this year
+KG-HUN-001,2022,heat_anomaly_prev,19.0,0.0738,Last summer was 19.0 C warmer than the long-term mean
+KG-HUN-001,2022,pdd_prev_summer,22,0.0574,Last summer had 22 positive degree-days (melt energy)
+KG-SHM-001,2022,area_growth_3y,10,0.099,Lake area grew 10% over the 3 years before this year
+KG-SHM-001,2022,surge_flag_prev,13,0.0858,The parent glacier was surging the year before
+KG-SHM-001,2022,velocity_change,16.0,0.0726,Glacier flow changed by 16.0 m/yr before this year
+KG-SHM-001,2022,heat_anomaly_prev,19.0,0.0594,Last summer was 19.0 C warmer than the long-term mean
+KG-SHM-001,2022,pdd_prev_summer,22,0.0462,Last summer had 22 positive degree-days (melt energy)
+KG-HUN-002,2022,area_growth_3y,10,0.036,Lake area grew 10% over the 3 years before this year
+KG-HUN-002,2022,surge_flag_prev,13,0.0312,The parent glacier was surging the year before
+KG-HUN-002,2022,velocity_change,16.0,0.0264,Glacier flow changed by 16.0 m/yr before this year
+KG-HUN-002,2022,heat_anomaly_prev,19.0,0.0216,Last summer was 19.0 C warmer than the long-term mean
+KG-HUN-002,2022,pdd_prev_summer,22,0.0168,Last summer had 22 positive degree-days (melt energy)
+KG-SHG-004,2022,area_growth_3y,10,0.0276,Lake area grew 10% over the 3 years before this year
+KG-SHG-004,2022,surge_flag_prev,13,0.0239,The parent glacier was surging the year before
+KG-SHG-004,2022,velocity_change,16.0,0.0202,Glacier flow changed by 16.0 m/yr before this year
+KG-SHG-004,2022,heat_anomaly_prev,19.0,0.0166,Last summer was 19.0 C warmer than the long-term mean
+KG-SHG-004,2022,pdd_prev_summer,22,0.0129,Last summer had 22 positive degree-days (melt energy)
+KG-HUN-012,2022,area_growth_3y,10,0.021,Lake area grew 10% over the 3 years before this year
+KG-HUN-012,2022,surge_flag_prev,13,0.0182,The parent glacier was surging the year before
+KG-HUN-012,2022,velocity_change,16.0,0.0154,Glacier flow changed by 16.0 m/yr before this year
+KG-HUN-012,2022,heat_anomaly_prev,19.0,0.0126,Last summer was 19.0 C warmer than the long-term mean
+KG-HUN-012,2022,pdd_prev_summer,22,0.0098,Last summer had 22 positive degree-days (melt energy)
+KG-SHM-003,2022,area_growth_3y,10,0.0198,Lake area grew 10% over the 3 years before this year
+KG-SHM-003,2022,surge_flag_prev,13,0.0172,The parent glacier was surging the year before
+KG-SHM-003,2022,velocity_change,16.0,0.0145,Glacier flow changed by 16.0 m/yr before this year
+KG-SHM-003,2022,heat_anomaly_prev,19.0,0.0119,Last summer was 19.0 C warmer than the long-term mean
+KG-SHM-003,2022,pdd_prev_summer,22,0.0092,Last summer had 22 positive degree-days (melt energy)
+KG-SHM-001,2023,area_growth_3y,10,0.039,Lake area grew 10% over the 3 years before this year
+KG-SHM-001,2023,surge_flag_prev,13,0.0338,The parent glacier was surging the year before
+KG-SHM-001,2023,velocity_change,16.0,0.0286,Glacier flow changed by 16.0 m/yr before this year
+KG-SHM-001,2023,heat_anomaly_prev,19.0,0.0234,Last summer was 19.0 C warmer than the long-term mean
+KG-SHM-001,2023,pdd_prev_summer,22,0.0182,Last summer had 22 positive degree-days (melt energy)
+KG-HUN-002,2023,area_growth_3y,10,0.039,Lake area grew 10% over the 3 years before this year
+KG-HUN-002,2023,surge_flag_prev,13,0.0338,The parent glacier was surging the year before
+KG-HUN-002,2023,velocity_change,16.0,0.0286,Glacier flow changed by 16.0 m/yr before this year
+KG-HUN-002,2023,heat_anomaly_prev,19.0,0.0234,Last summer was 19.0 C warmer than the long-term mean
+KG-HUN-002,2023,pdd_prev_summer,22,0.0182,Last summer had 22 positive degree-days (melt energy)
+KG-HUN-001,2023,area_growth_3y,10,0.036,Lake area grew 10% over the 3 years before this year
+KG-HUN-001,2023,surge_flag_prev,13,0.0312,The parent glacier was surging the year before
+KG-HUN-001,2023,velocity_change,16.0,0.0264,Glacier flow changed by 16.0 m/yr before this year
+KG-HUN-001,2023,heat_anomaly_prev,19.0,0.0216,Last summer was 19.0 C warmer than the long-term mean
+KG-HUN-001,2023,pdd_prev_summer,22,0.0168,Last summer had 22 positive degree-days (melt energy)
+KG-SHG-004,2023,area_growth_3y,10,0.0294,Lake area grew 10% over the 3 years before this year
+KG-SHG-004,2023,surge_flag_prev,13,0.0255,The parent glacier was surging the year before
+KG-SHG-004,2023,velocity_change,16.0,0.0216,Glacier flow changed by 16.0 m/yr before this year
+KG-SHG-004,2023,heat_anomaly_prev,19.0,0.0176,Last summer was 19.0 C warmer than the long-term mean
+KG-SHG-004,2023,pdd_prev_summer,22,0.0137,Last summer had 22 positive degree-days (melt energy)
+KG-HUN-012,2023,area_growth_3y,10,0.0225,Lake area grew 10% over the 3 years before this year
+KG-HUN-012,2023,surge_flag_prev,13,0.0195,The parent glacier was surging the year before
+KG-HUN-012,2023,velocity_change,16.0,0.0165,Glacier flow changed by 16.0 m/yr before this year
+KG-HUN-012,2023,heat_anomaly_prev,19.0,0.0135,Last summer was 19.0 C warmer than the long-term mean
+KG-HUN-012,2023,pdd_prev_summer,22,0.0105,Last summer had 22 positive degree-days (melt energy)
+KG-SHM-003,2023,area_growth_3y,10,0.0222,Lake area grew 10% over the 3 years before this year
+KG-SHM-003,2023,surge_flag_prev,13,0.0192,The parent glacier was surging the year before
+KG-SHM-003,2023,velocity_change,16.0,0.0163,Glacier flow changed by 16.0 m/yr before this year
+KG-SHM-003,2023,heat_anomaly_prev,19.0,0.0133,Last summer was 19.0 C warmer than the long-term mean
+KG-SHM-003,2023,pdd_prev_summer,22,0.0104,Last summer had 22 positive degree-days (melt energy)
+KG-HUN-001,2024,area_growth_3y,10,0.054,Lake area grew 10% over the 3 years before this year
+KG-HUN-001,2024,surge_flag_prev,13,0.0468,The parent glacier was surging the year before
+KG-HUN-001,2024,velocity_change,16.0,0.0396,Glacier flow changed by 16.0 m/yr before this year
+KG-HUN-001,2024,heat_anomaly_prev,19.0,0.0324,Last summer was 19.0 C warmer than the long-term mean
+KG-HUN-001,2024,pdd_prev_summer,22,0.0252,Last summer had 22 positive degree-days (melt energy)
+KG-SHM-001,2024,area_growth_3y,10,0.045,Lake area grew 10% over the 3 years before this year
+KG-SHM-001,2024,surge_flag_prev,13,0.039,The parent glacier was surging the year before
+KG-SHM-001,2024,velocity_change,16.0,0.033,Glacier flow changed by 16.0 m/yr before this year
+KG-SHM-001,2024,heat_anomaly_prev,19.0,0.027,Last summer was 19.0 C warmer than the long-term mean
+KG-SHM-001,2024,pdd_prev_summer,22,0.021,Last summer had 22 positive degree-days (melt energy)
+KG-HUN-002,2024,area_growth_3y,10,0.042,Lake area grew 10% over the 3 years before this year
+KG-HUN-002,2024,surge_flag_prev,13,0.0364,The parent glacier was surging the year before
+KG-HUN-002,2024,velocity_change,16.0,0.0308,Glacier flow changed by 16.0 m/yr before this year
+KG-HUN-002,2024,heat_anomaly_prev,19.0,0.0252,Last summer was 19.0 C warmer than the long-term mean
+KG-HUN-002,2024,pdd_prev_summer,22,0.0196,Last summer had 22 positive degree-days (melt energy)
+KG-SHG-004,2024,area_growth_3y,10,0.0312,Lake area grew 10% over the 3 years before this year
+KG-SHG-004,2024,surge_flag_prev,13,0.027,The parent glacier was surging the year before
+KG-SHG-004,2024,velocity_change,16.0,0.0229,Glacier flow changed by 16.0 m/yr before this year
+KG-SHG-004,2024,heat_anomaly_prev,19.0,0.0187,Last summer was 19.0 C warmer than the long-term mean
+KG-SHG-004,2024,pdd_prev_summer,22,0.0146,Last summer had 22 positive degree-days (melt energy)
+KG-SHM-003,2024,area_growth_3y,10,0.0246,Lake area grew 10% over the 3 years before this year
+KG-SHM-003,2024,surge_flag_prev,13,0.0213,The parent glacier was surging the year before
+KG-SHM-003,2024,velocity_change,16.0,0.018,Glacier flow changed by 16.0 m/yr before this year
+KG-SHM-003,2024,heat_anomaly_prev,19.0,0.0148,Last summer was 19.0 C warmer than the long-term mean
+KG-SHM-003,2024,pdd_prev_summer,22,0.0115,Last summer had 22 positive degree-days (melt energy)
+KG-HUN-012,2024,area_growth_3y,10,0.024,Lake area grew 10% over the 3 years before this year
+KG-HUN-012,2024,surge_flag_prev,13,0.0208,The parent glacier was surging the year before
+KG-HUN-012,2024,velocity_change,16.0,0.0176,Glacier flow changed by 16.0 m/yr before this year
+KG-HUN-012,2024,heat_anomaly_prev,19.0,0.0144,Last summer was 19.0 C warmer than the long-term mean
+KG-HUN-012,2024,pdd_prev_summer,22,0.0112,Last summer had 22 positive degree-days (melt energy)
+KG-HUN-001,2025,area_growth_3y,10,0.066,Lake area grew 10% over the 3 years before this year
+KG-HUN-001,2025,surge_flag_prev,13,0.0572,The parent glacier was surging the year before
+KG-HUN-001,2025,velocity_change,16.0,0.0484,Glacier flow changed by 16.0 m/yr before this year
+KG-HUN-001,2025,heat_anomaly_prev,19.0,0.0396,Last summer was 19.0 C warmer than the long-term mean
+KG-HUN-001,2025,pdd_prev_summer,22,0.0308,Last summer had 22 positive degree-days (melt energy)
+KG-SHM-001,2025,area_growth_3y,10,0.051,Lake area grew 10% over the 3 years before this year
+KG-SHM-001,2025,surge_flag_prev,13,0.0442,The parent glacier was surging the year before
+KG-SHM-001,2025,velocity_change,16.0,0.0374,Glacier flow changed by 16.0 m/yr before this year
+KG-SHM-001,2025,heat_anomaly_prev,19.0,0.0306,Last summer was 19.0 C warmer than the long-term mean
+KG-SHM-001,2025,pdd_prev_summer,22,0.0238,Last summer had 22 positive degree-days (melt energy)
+KG-HUN-002,2025,area_growth_3y,10,0.045,Lake area grew 10% over the 3 years before this year
+KG-HUN-002,2025,surge_flag_prev,13,0.039,The parent glacier was surging the year before
+KG-HUN-002,2025,velocity_change,16.0,0.033,Glacier flow changed by 16.0 m/yr before this year
+KG-HUN-002,2025,heat_anomaly_prev,19.0,0.027,Last summer was 19.0 C warmer than the long-term mean
+KG-HUN-002,2025,pdd_prev_summer,22,0.021,Last summer had 22 positive degree-days (melt energy)
+KG-SHG-004,2025,area_growth_3y,10,0.033,Lake area grew 10% over the 3 years before this year
+KG-SHG-004,2025,surge_flag_prev,13,0.0286,The parent glacier was surging the year before
+KG-SHG-004,2025,velocity_change,16.0,0.0242,Glacier flow changed by 16.0 m/yr before this year
+KG-SHG-004,2025,heat_anomaly_prev,19.0,0.0198,Last summer was 19.0 C warmer than the long-term mean
+KG-SHG-004,2025,pdd_prev_summer,22,0.0154,Last summer had 22 positive degree-days (melt energy)
+KG-SHM-003,2025,area_growth_3y,10,0.027,Lake area grew 10% over the 3 years before this year
+KG-SHM-003,2025,surge_flag_prev,13,0.0234,The parent glacier was surging the year before
+KG-SHM-003,2025,velocity_change,16.0,0.0198,Glacier flow changed by 16.0 m/yr before this year
+KG-SHM-003,2025,heat_anomaly_prev,19.0,0.0162,Last summer was 19.0 C warmer than the long-term mean
+KG-SHM-003,2025,pdd_prev_summer,22,0.0126,Last summer had 22 positive degree-days (melt energy)
+KG-HUN-012,2025,area_growth_3y,10,0.0255,Lake area grew 10% over the 3 years before this year
+KG-HUN-012,2025,surge_flag_prev,13,0.0221,The parent glacier was surging the year before
+KG-HUN-012,2025,velocity_change,16.0,0.0187,Glacier flow changed by 16.0 m/yr before this year
+KG-HUN-012,2025,heat_anomaly_prev,19.0,0.0153,Last summer was 19.0 C warmer than the long-term mean
+KG-HUN-012,2025,pdd_prev_summer,22,0.0119,Last summer had 22 positive degree-days (melt energy)

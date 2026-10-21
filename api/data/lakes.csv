@@ -1,0 +1,7 @@
+lake_id,name,basin,lat,lon,area_ref_km2,dam_type,glacier_id,tier2
+KG-HUN-001,Shisper,hunza,36.4339,74.8547,0.28,ice,RGI60-14.00011,True
+KG-HUN-002,Passu,hunza,36.4621,74.8973,0.12,ice,RGI60-14.00023,True
+KG-HUN-012,,hunza,36.5187,74.6631,0.06,moraine,RGI60-14.00058,False
+KG-SHM-001,Khurdopin,shimshal,36.3912,75.6981,0.2,ice,RGI60-14.00137,True
+KG-SHM-003,,shimshal,36.4498,75.6044,0.04,moraine,RGI60-14.00192,False
+KG-SHG-004,,shigar,35.6012,75.4233,0.09,bedrock,RGI60-14.00241,False

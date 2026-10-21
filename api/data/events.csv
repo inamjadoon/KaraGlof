@@ -1,0 +1,5 @@
+event_id,lake_id,date,date_certainty,source,notes
+EV-2019-SHI,KG-HUN-001,2019-07-21,day,Bhambri et al. inventory,
+EV-2020-SHI,KG-HUN-001,2020-06-28,day,Bhambri et al. inventory,
+EV-2022-SHI,KG-HUN-001,2022-05-07,day,news + Bhambri et al.,Hassanabad bridge destroyed
+EV-2022-KHU,KG-SHM-001,2022-07-15,month,Bhambri et al. inventory,Date known to the month

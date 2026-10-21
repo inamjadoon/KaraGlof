@@ -1,0 +1,119 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.8547,
+          36.4339
+        ]
+      },
+      "properties": {
+        "lake_id": "KG-HUN-001",
+        "name": "Shisper",
+        "basin": "hunza",
+        "area_ref_km2": 0.28,
+        "dam_type": "ice",
+        "glacier_id": "RGI60-14.00011",
+        "tier2": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.8973,
+          36.4621
+        ]
+      },
+      "properties": {
+        "lake_id": "KG-HUN-002",
+        "name": "Passu",
+        "basin": "hunza",
+        "area_ref_km2": 0.12,
+        "dam_type": "ice",
+        "glacier_id": "RGI60-14.00023",
+        "tier2": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.6631,
+          36.5187
+        ]
+      },
+      "properties": {
+        "lake_id": "KG-HUN-012",
+        "name": null,
+        "basin": "hunza",
+        "area_ref_km2": 0.06,
+        "dam_type": "moraine",
+        "glacier_id": "RGI60-14.00058",
+        "tier2": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.6981,
+          36.3912
+        ]
+      },
+      "properties": {
+        "lake_id": "KG-SHM-001",
+        "name": "Khurdopin",
+        "basin": "shimshal",
+        "area_ref_km2": 0.2,
+        "dam_type": "ice",
+        "glacier_id": "RGI60-14.00137",
+        "tier2": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.6044,
+          36.4498
+        ]
+      },
+      "properties": {
+        "lake_id": "KG-SHM-003",
+        "name": null,
+        "basin": "shimshal",
+        "area_ref_km2": 0.04,
+        "dam_type": "moraine",
+        "glacier_id": "RGI60-14.00192",
+        "tier2": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.4233,
+          35.6012
+        ]
+      },
+      "properties": {
+        "lake_id": "KG-SHG-004",
+        "name": null,
+        "basin": "shigar",
+        "area_ref_km2": 0.09,
+        "dam_type": "bedrock",
+        "glacier_id": "RGI60-14.00241",
+        "tier2": false
+      }
+    }
+  ]
+}
