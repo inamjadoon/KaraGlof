@@ -6,12 +6,12 @@
 # --- Data handling ---
 pandas==2.2.3
 geopandas==1.0.1
-pyarrow==17.0.0
+pyarrow==19.0.0
 
 # --- Models ---
 scikit-learn==1.5.2
 lightgbm==4.5.0
-shap==0.46.0
+shap==0.48.0
 
 # --- Earth Engine (Colab notebooks only; the server never calls EE) ---
 earthengine-api==1.1.2
@@ -25,3 +25,7 @@ pydantic==2.10.3
 # --- Tests and quality ---
 pytest==8.3.4
 ruff==0.8.4
+# geemap 0.34.5 still imports pkg_resources, which setuptools>=81 removed.
+setuptools==80.9.0
+# geemap 0.34.5 imports IPython.core.display.display, removed in IPython 9.
+ipython==8.34.0
