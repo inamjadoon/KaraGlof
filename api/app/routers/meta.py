@@ -34,4 +34,4 @@ def get_download(name: str, store: Annotated[DataStore, Depends(get_store)]):
     path = store.download_path(name)
     if path is None:
         raise HTTPException(status_code=404, detail="download not found")
-    return FileResponse(path, media_type="text/csv")
+    return FileResponse(path, media_type="text/csv", filename=path.name)

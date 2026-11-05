@@ -3,14 +3,15 @@
 The API never computes model or satellite results: at startup it loads the
 released files from ``api/data`` (SPECS §3) into memory and serves them
 read-only. The only derivations here are joins a store must do: attaching
-names to ranking rows, merging alert levels with weekly observations, and
-lead-time lookups between events and alerts.
+names to ranking rows and merging alert levels with weekly observations.
+Case lead times and false alarms come from metrics.json (computed by
+notebook 05 with karaglof.rules), never recomputed here.
 """
 
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 
 import pandas as pd
@@ -35,14 +36,6 @@ DOWNLOADS = {
     "lake_year": "lake_year.csv",
     "ranking": "ranking.csv",
 }
-
-
-@dataclass
-class Case:
-    case_id: str
-    lake_id: str
-    event_date: str | None
-    lead_time_days: int | None
 
 
 class DataStore:
@@ -75,10 +68,10 @@ class DataStore:
 
         self._lakes_by_id = {r.lake_id: r for r in self.lakes.itertuples(index=False)}
         self.ranking_years = sorted(self.ranking["year"].unique().tolist())
-        self.cases = self._build_cases()
+        self.cases = self.metrics["tier2"]["cases"]
 
     @classmethod
-    def load(cls, data_dir: Path) -> "DataStore":
+    def load(cls, data_dir: Path) -> DataStore:
         missing = [f for f in RELEASED_FILES if not (data_dir / f).is_file()]
         if missing:
             msg = f"released files missing from {data_dir}: {', '.join(missing)}"
@@ -167,7 +160,8 @@ class DataStore:
         df = self.shap_top[
             (self.shap_top["lake_id"] == lake_id) & (self.shap_top["year"] == year)
         ]
-        df = df.sort_values("shap", ascending=False).head(5)
+        # Top drivers by size of effect: a strong negative driver matters too.
+        df = df.reindex(df["shap"].abs().sort_values(ascending=False).index).head(5)
         return [
             {"feature": r.feature, "value": str(r.value), "shap": float(r.shap),
              "text": r.text}
@@ -175,13 +169,16 @@ class DataStore:
         ]
 
     def alerts_for_lake(self, lake_id: str,
-                        from_date: str | None, to_date: str | None) -> list[dict]:
+                        from_date: date | None, to_date: date | None) -> list[dict]:
+        # week_start is stored as an ISO string, so compare against ISO strings.
+        start = from_date.isoformat() if from_date is not None else None
+        end = to_date.isoformat() if to_date is not None else None
         df = self.alerts[self.alerts["lake_id"] == lake_id]
         rows = []
         for r in df.sort_values("week_start").itertuples(index=False):
-            if from_date is not None and r.week_start < from_date:
+            if start is not None and r.week_start < start:
                 continue
-            if to_date is not None and r.week_start > to_date:
+            if end is not None and r.week_start > end:
                 continue
             week = self.week_by_key.get((lake_id, r.week_start), None)
             rows.append({
@@ -192,26 +189,6 @@ class DataStore:
                 "reasons": list(r.reasons),
             })
         return rows
-
-    def _build_cases(self) -> list[Case]:
-        cases = []
-        for e in self.events.itertuples(index=False):
-            lake = self._lakes_by_id.get(e.lake_id)
-            slug = (lake.name if lake is not None and lake.name
-                    else e.lake_id.lower())
-            year = e.date[:4]
-            lead = None
-            alerts = self.alerts[
-                (self.alerts["lake_id"] == e.lake_id)
-                & (self.alerts["level"].isin(["amber", "red"]))
-                & (self.alerts["week_start"] <= e.date)
-            ]
-            if not alerts.empty:
-                lead = (pd.Timestamp(e.date)
-                        - pd.Timestamp(alerts["week_start"].min())).days
-            cases.append(Case(case_id=f"{slug.lower()}-{year}", lake_id=e.lake_id,
-                              event_date=e.date, lead_time_days=lead))
-        return cases
 
     def download_path(self, name: str) -> Path | None:
         filename = DOWNLOADS.get(name)

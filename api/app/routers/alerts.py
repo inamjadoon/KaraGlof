@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import date
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 
 from .. import schemas
 from ..store import DataStore
@@ -18,9 +18,11 @@ router = APIRouter()
 def get_alerts(
     lake_id: str,
     store: Annotated[DataStore, Depends(get_store)],
-    from_date: date | None = None,
-    to_date: date | None = None,
+    from_date: Annotated[date | None, Query(alias="from")] = None,
+    to_date: Annotated[date | None, Query(alias="to")] = None,
 ):
+    # SPECS §6 names the parameters `from` and `to`; `from` is a Python
+    # keyword, so the function arguments use aliases.
     if store.get_lake(lake_id) is None:
         raise HTTPException(status_code=404, detail="lake not found")
     items = store.alerts_for_lake(lake_id, from_date, to_date)
@@ -29,5 +31,4 @@ def get_alerts(
 
 @router.get("/cases", response_model=schemas.CasesResponse)
 def get_cases(store: Annotated[DataStore, Depends(get_store)]):
-    cases = [c.__dict__ for c in store.cases]
-    return {"data_version": store.data_version, "cases": cases}
+    return {"data_version": store.data_version, "cases": store.cases}

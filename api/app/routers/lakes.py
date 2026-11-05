@@ -36,7 +36,7 @@ def list_lakes(
     basin: schemas.Basin | None = None,
     tier2: bool | None = None,
 ):
-    lakes = [_lake_payload(l) for l in store.list_lakes(basin=basin, tier2=tier2)]
+    lakes = [_lake_payload(lake) for lake in store.list_lakes(basin=basin, tier2=tier2)]
     return {"data_version": store.data_version, "lakes": lakes}
 
 

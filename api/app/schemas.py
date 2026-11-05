@@ -115,6 +115,7 @@ class CaseItem(BaseModel):
     lake_id: str
     event_date: date | None
     lead_time_days: int | None
+    false_alarms: int
 
 
 class CasesResponse(BaseModel):
