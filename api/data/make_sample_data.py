@@ -27,7 +27,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
 import pandas as pd  # noqa: E402
 
-from karaglof.rules import DEFAULT_THRESHOLDS, assign_alert_levels  # noqa: E402
+from karaglof.rules import (  # noqa: E402
+    DEFAULT_THRESHOLDS,
+    assign_alert_levels,
+    count_false_alarms,
+    lead_time_days,
+)
 
 DATA_DIR = Path(__file__).resolve().parent
 WEEK = timedelta(weeks=1)
@@ -46,8 +51,10 @@ EVENTS = [
     # event_id, lake_id, date, date_certainty, source, notes
     ("EV-2019-SHI", "KG-HUN-001", "2019-07-21", "day", "Bhambri et al. inventory", ""),
     ("EV-2020-SHI", "KG-HUN-001", "2020-06-28", "day", "Bhambri et al. inventory", ""),
-    ("EV-2022-SHI", "KG-HUN-001", "2022-05-07", "day", "news + Bhambri et al.", "Hassanabad bridge destroyed"),
-    ("EV-2022-KHU", "KG-SHM-001", "2022-07-15", "month", "Bhambri et al. inventory", "Date known to the month"),
+    ("EV-2022-SHI", "KG-HUN-001", "2022-05-07", "day", "news + Bhambri et al.",
+     "Hassanabad bridge destroyed"),
+    ("EV-2022-KHU", "KG-SHM-001", "2022-07-15", "month", "Bhambri et al. inventory",
+     "Date known to the month"),
 ]
 
 
@@ -64,15 +71,13 @@ def weekly_rows(start: date, areas: list[float], anomalies: list[float], pdds: l
     rows = []
     for i, area in enumerate(areas):
         week = start + i * WEEK
-        if i < 2:
-            change_2w = 0.0
-        else:
-            change_2w = (area / areas[i - 2] - 1.0) * 100.0
+        # No 2-week change exists for the first two weeks: leave it empty, not 0.
+        change_2w = None if i < 2 else round((area / areas[i - 2] - 1.0) * 100.0, 1)
         in_window = int(event_date is not None and 0 <= (event_date - week).days <= 13)
         rows.append([
             week.isoformat(),
             round(area, 3),
-            round(change_2w, 1),
+            change_2w,
             round(anomalies[i], 1),
             pdds[i],
             round(rains[i], 1),
@@ -88,8 +93,8 @@ def build_lake_week() -> list[list]:
     rows: list[list] = []
 
     # Shisper: fills slowly through early April, fast from mid-April 2022,
-    # drains on 7 May. First amber 25 April (2-week growth > 15%), red by
-    # 2 May (amber streak plus a heat spike at the 95th percentile).
+    # drains on 7 May. First amber 18 April (record area + >2 C anomaly), red
+    # from 25 April (amber streak), lead time 19 days.
     rows += [["KG-HUN-001"] + r for r in weekly_rows(
         date(2022, 3, 7),
         areas=[0.20, 0.205, 0.21, 0.22, 0.23, 0.24, 0.26, 0.30, 0.35,
@@ -97,7 +102,8 @@ def build_lake_week() -> list[list]:
         anomalies=[0.4, 0.6, 0.9, 1.2, 1.5, 1.9, 2.2, 2.8, 3.4,
                    1.1, 0.8, 0.7, 0.9, 1.0, 1.2, 1.4, 1.5, 1.6],
         pdds=[12, 15, 19, 24, 30, 38, 45, 58, 66, 40, 30, 28, 30, 34, 38, 42, 45, 46],
-        rains=[2.1, 1.4, 3.2, 0.8, 1.1, 2.6, 1.9, 0.4, 0.2, 6.8, 3.1, 1.2, 0.9, 0.6, 1.3, 0.7, 0.5, 0.4],
+        rains=[2.1, 1.4, 3.2, 0.8, 1.1, 2.6, 1.9, 0.4, 0.2,
+               6.8, 3.1, 1.2, 0.9, 0.6, 1.3, 0.7, 0.5, 0.4],
         event_date=date(2022, 5, 7),
     )]
 
@@ -134,7 +140,8 @@ def build_lake_area_yearly() -> list[list]:
         if lake_id == "KG-HUN-001":
             curve = shisper
         elif lake_id == "KG-SHM-001":
-            curve = {2015: 0.08, 2018: 0.13, 2020: 0.15, 2021: 0.17, 2022: 0.26, 2023: 0.11, 2024: 0.13, 2025: 0.16}
+            curve = {2015: 0.08, 2018: 0.13, 2020: 0.15, 2021: 0.17, 2022: 0.26,
+                     2023: 0.11, 2024: 0.13, 2025: 0.16}
         else:
             base = 0.05 if lake_id != "KG-SHG-004" else 0.08
             curve = {y: round(base + 0.002 * (y - 2015), 3) for y in range(2015, 2026)}
@@ -189,7 +196,7 @@ def build_ranking() -> list[list]:
     }
     rows = []
     for year in range(2020, 2026):
-        ordered = sorted(score_by_lake, key=lambda l: score_by_lake[l][year], reverse=True)
+        ordered = sorted(score_by_lake, key=lambda lake: score_by_lake[lake][year], reverse=True)
         for rank, lake_id in enumerate(ordered, start=1):
             rows.append([lake_id, year, score_by_lake[lake_id][year], rank])
     return ["lake_id", "year", "risk_score", "rank"], rows
@@ -214,7 +221,32 @@ def build_shap_top(ranking_rows: list[list]) -> list[list]:
     return ["lake_id", "year", "feature", "value", "shap", "text"], rows
 
 
-def build_metrics() -> dict:
+#: Tier 2 replay cases: (case_id, lake_id, event_date or None for a quiet season).
+CASES = [
+    ("shisper-2022", "KG-HUN-001", "2022-05-07"),
+    ("khurdopin-2022", "KG-SHM-001", "2022-07-15"),
+    ("passu-2022", "KG-HUN-002", None),
+]
+
+
+def build_cases(alerts: pd.DataFrame) -> list[dict]:
+    """Lead time and false alarms per case, computed by the real functions in
+    karaglof.rules so metrics.json always agrees with alerts.csv."""
+    cases = []
+    for case_id, lake_id, event_date in CASES:
+        lake_alerts = alerts[alerts["lake_id"] == lake_id]
+        lake_events = [e[2] for e in EVENTS if e[1] == lake_id]
+        cases.append({
+            "case_id": case_id,
+            "lake_id": lake_id,
+            "event_date": event_date,
+            "lead_time_days": lead_time_days(lake_alerts, event_date) if event_date else None,
+            "false_alarms": count_false_alarms(lake_alerts, lake_events),
+        })
+    return cases
+
+
+def build_metrics(alerts: pd.DataFrame) -> dict:
     th = DEFAULT_THRESHOLDS
     return {
         "data_version": "data-v1",
@@ -251,14 +283,7 @@ def build_metrics() -> dict:
                 "anomaly_red_c": th.anomaly_red_c,
             },
             "thresholds_frozen_before_replay": True,
-            "cases": [
-                {"case_id": "shisper-2022", "lake_id": "KG-HUN-001",
-                 "event_date": "2022-05-07", "lead_time_days": 12, "false_alarms": 0},
-                {"case_id": "khurdopin-2022", "lake_id": "KG-SHM-001",
-                 "event_date": "2022-07-15", "lead_time_days": 18, "false_alarms": 0},
-                {"case_id": "passu-2022", "lake_id": "KG-HUN-002",
-                 "event_date": None, "lead_time_days": None, "false_alarms": 2},
-            ],
+            "cases": build_cases(alerts),
         },
     }
 
@@ -286,7 +311,7 @@ def main() -> None:
     write_csv("lakes.csv",
               ["lake_id", "name", "basin", "lat", "lon", "area_ref_km2",
                "dam_type", "glacier_id", "tier2"],
-              [list(l) for l in LAKES])
+              [list(lake) for lake in LAKES])
     write_csv("events.csv",
               ["event_id", "lake_id", "date", "date_certainty", "source", "notes"],
               [list(e) for e in EVENTS])
@@ -307,7 +332,7 @@ def main() -> None:
     write_csv("shap_top.csv", header, rows)
 
     (DATA_DIR / "metrics.json").write_text(
-        json.dumps(build_metrics(), indent=2) + "\n", encoding="utf-8")
+        json.dumps(build_metrics(alerts), indent=2) + "\n", encoding="utf-8")
     (DATA_DIR / "lakes.geojson").write_text(
         json.dumps(build_lakes_geojson(), indent=2) + "\n", encoding="utf-8")
 

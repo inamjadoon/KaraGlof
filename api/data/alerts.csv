@@ -5,8 +5,8 @@ KG-HUN-001,2022-03-21,green,
 KG-HUN-001,2022-03-28,green,
 KG-HUN-001,2022-04-04,green,
 KG-HUN-001,2022-04-11,green,
-KG-HUN-001,2022-04-18,green,
-KG-HUN-001,2022-04-25,amber,area grew >15% in 2 weeks; area above lake p90 and t2m anomaly >+2 C
+KG-HUN-001,2022-04-18,amber,area above lake p90 and t2m anomaly >+2 C
+KG-HUN-001,2022-04-25,red,area grew >15% in 2 weeks; area above lake p90 and t2m anomaly >+2 C; amber conditions 2 weeks in a row
 KG-HUN-001,2022-05-02,red,area grew >15% in 2 weeks; area above lake p90 and t2m anomaly >+2 C; area above lake p95 and t2m anomaly >+3 C; amber conditions 2 weeks in a row
 KG-HUN-001,2022-05-09,green,
 KG-HUN-001,2022-05-16,green,
