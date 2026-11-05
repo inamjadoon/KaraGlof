@@ -58,7 +58,11 @@ pip install -r requirements.txt   # pinned versions (NFR-1)
 pip install -e .                  # makes the karaglof package importable
 ```
 
-Checks once code lands: `ruff check .` for linting, `pytest` for tests.
+```bash
+python -m pytest                                  # tests
+python -m ruff check .                            # lint
+uvicorn app.main:app --app-dir api --reload       # API at http://localhost:8000/docs
+```
 
 ## Research integrity
 
@@ -75,8 +79,8 @@ The rules that make this research defensible (see AGENTS.md for the full list):
 
 ## Status
 
-**v0.1 — scaffold only.** Planning (PRD + SPECS) is complete; notebooks, API and web app are not
-written yet. See the milestone plan in PRD §7.
+**v0.5: read-only API on sample data, with tests.** Notebooks and the web app are not written
+yet. See the milestone plan in PRD §7 and the step-by-step log in [PROJECT_LOG.md](PROJECT_LOG.md).
 
 ## Licence
 
