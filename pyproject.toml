@@ -15,9 +15,18 @@ dependencies = []
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.pytest.ini_options]
+# `api` makes `app` importable for the API tests; `src` makes `karaglof`
+# importable even without `pip install -e .`.
+pythonpath = ["api", "src"]
+testpaths = ["tests", "api/tests"]
+
 [tool.ruff]
 target-version = "py311"
 line-length = 100
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app", "karaglof"]
