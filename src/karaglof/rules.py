@@ -22,6 +22,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+import numpy as np
 import pandas as pd
 
 LEVEL_GREEN = "green"
@@ -45,12 +46,24 @@ class Thresholds:
 DEFAULT_THRESHOLDS = Thresholds()
 
 
-def _amber_mask(df: pd.DataFrame, th: Thresholds) -> pd.Series:
-    grew_fast = df["area_change_2w_pct"] > th.growth_2w_pct
-    hot_and_high = (df["area_pct"] >= th.percentile_amber) & (
-        df["t2m_anomaly_c"] > th.anomaly_amber_c
-    )
-    return grew_fast | hot_and_high
+#: A week "leads into" a drainage if the drainage happens 0-13 days after the
+#: week starts — the same 14-day window as `event_in_window` (SPECS §3).
+EVENT_WINDOW_DAYS = 14
+
+
+def _past_only_percentile(area: pd.Series) -> pd.Series:
+    """Percentile of each week's area among that lake's weeks up to and
+    including it. Later weeks never change an earlier week's value, so the
+    rule cannot see the future. Missing areas stay missing."""
+    vals = area.to_numpy(dtype=float)
+    out = np.full(len(vals), np.nan)
+    for i, v in enumerate(vals):
+        if np.isnan(v):
+            continue
+        history = vals[: i + 1]
+        history = history[~np.isnan(history)]
+        out[i] = (history <= v).mean() * 100.0
+    return pd.Series(out, index=area.index)
 
 
 def _reasons(row, th: Thresholds) -> str:
@@ -77,18 +90,20 @@ def assign_alert_levels(
 ) -> pd.DataFrame:
     """Assign green/amber/red per lake-week following the frozen rules.
 
-    The area percentile is computed per lake over the provided weekly series
-    (the lake's full weekly record); only the current and earlier rows feed
-    each decision. Returns columns lake_id, week_start, level, reasons.
+    The area percentile is computed per lake from that week and earlier weeks
+    only (see `_past_only_percentile`), so every decision uses only data up
+    to that week. Returns columns lake_id, week_start, level, reasons.
     """
     df = lake_week.sort_values(["lake_id", "week_start"]).copy()
-    df["area_pct"] = df.groupby("lake_id")["area_km2_s1"].rank(pct=True) * 100.0
+    df["area_pct"] = df.groupby("lake_id", group_keys=False)["area_km2_s1"].transform(
+        _past_only_percentile
+    )
 
     df["_grew_fast"] = df["area_change_2w_pct"] > thresholds.growth_2w_pct
     df["_hot_and_high"] = (df["area_pct"] >= thresholds.percentile_amber) & (
         df["t2m_anomaly_c"] > thresholds.anomaly_amber_c
     )
-    df["_amber_now"] = _amber_mask(df, thresholds)
+    df["_amber_now"] = df["_grew_fast"] | df["_hot_and_high"]
     df["_amber_streak"] = (
         df.groupby("lake_id")["_amber_now"]
         .rolling(thresholds.red_weeks_in_a_row, min_periods=thresholds.red_weeks_in_a_row)
@@ -109,10 +124,51 @@ def assign_alert_levels(
     return df[["lake_id", "week_start", "level", "reasons"]].reset_index(drop=True)
 
 
+def _raised(alerts: pd.DataFrame) -> pd.Series:
+    return alerts["level"].isin([LEVEL_AMBER, LEVEL_RED])
+
+
 def lead_time_days(alerts: pd.DataFrame, event_date: str) -> int | None:
-    """Days between the first amber-or-red week and the drainage date."""
-    raised = alerts[alerts["level"].isin([LEVEL_AMBER, LEVEL_RED])]
-    if raised.empty:
+    """Days between the start of the warning run that leads into a drainage
+    and the drainage date (SPECS §5).
+
+    `alerts` holds one lake's weekly rows. A warning run is a stretch of
+    consecutive amber/red weeks; it counts only if its last week starts
+    within EVENT_WINDOW_DAYS before the drainage. Older, unrelated alerts
+    (e.g. from earlier seasons) never stretch the lead time. Returns None
+    when no warning led into the event.
+    """
+    run = _warning_run(alerts, pd.Timestamp(event_date))
+    if not run:
         return None
-    first = raised["week_start"].min()
-    return (pd.Timestamp(event_date) - pd.Timestamp(first)).days
+    return (pd.Timestamp(event_date) - min(run)).days
+
+
+def _warning_run(alerts: pd.DataFrame, event: pd.Timestamp) -> list[pd.Timestamp]:
+    """Week starts of the warning run leading into `event` (empty if none)."""
+    a = alerts.assign(week=pd.to_datetime(alerts["week_start"]))
+    a = a[a["week"] <= event].sort_values("week")
+    weeks = a["week"].tolist()
+    raised = _raised(a).tolist()
+
+    i = len(weeks) - 1
+    if i < 0 or not raised[i] or (event - weeks[i]).days >= EVENT_WINDOW_DAYS:
+        return []
+    run = [weeks[i]]
+    while i > 0 and raised[i - 1]:
+        i -= 1
+        run.append(weeks[i])
+    return run
+
+
+def count_false_alarms(alerts: pd.DataFrame, event_dates: list[str]) -> int:
+    """Amber/red weeks that are not part of a warning run leading into a
+    drainage (SPECS §5). Uses the same run definition as `lead_time_days`,
+    so a week counted in a lead time is never also a false alarm.
+    `alerts` holds one lake's weekly rows; `event_dates` are that lake's
+    drainage dates."""
+    explained = set()
+    for d in event_dates:
+        explained.update(_warning_run(alerts, pd.Timestamp(d)))
+    raised_weeks = pd.to_datetime(alerts.loc[_raised(alerts), "week_start"])
+    return sum(week not in explained for week in raised_weeks)
