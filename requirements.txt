@@ -24,6 +24,8 @@ pydantic==2.10.3
 
 # --- Tests and quality ---
 pytest==8.3.4
+# Required by FastAPI's TestClient in api/tests.
+httpx==0.28.1
 ruff==0.8.4
 # geemap 0.34.5 still imports pkg_resources, which setuptools>=81 removed.
 setuptools==80.9.0
