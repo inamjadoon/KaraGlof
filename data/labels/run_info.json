@@ -1,0 +1,211 @@
+{
+  "notebook": "01_lakes_and_labels",
+  "run_utc": "2026-11-12T09:52:51+00:00",
+  "sources": {
+    "basins": "WWF/HydroSHEDS/v1/Basins/hybas_8",
+    "water": "JRC/GSW1_4/GlobalSurfaceWater max_extent",
+    "glaciers": "RGI v7.0 (projects/sat-io/open-datasets/RGI/RGI_VECTOR_MERGED_V7)",
+    "events": "Lutzow & Veh GLOF database v4.2 (doi:10.5281/zenodo.23370149)"
+  },
+  "parameters": {
+    "REPO_URL": "https://github.com/inamjadoon/KaraGlof.git",
+    "EXPORT_FOLDER": "KaraGlof_exports",
+    "ANCHORS": {
+      "shisper": [
+        74.562535,
+        36.360999
+      ],
+      "passu": [
+        74.879298,
+        36.457205
+      ],
+      "khurdopin": [
+        75.478606,
+        36.342335
+      ],
+      "biafo": [
+        75.91,
+        35.69
+      ],
+      "chihnji": [
+        74.004089,
+        36.783588
+      ],
+      "gargoh": [
+        74.665676,
+        35.997077
+      ],
+      "lokpar": [
+        76.270137,
+        35.495623
+      ],
+      "sost": [
+        74.82,
+        36.69
+      ]
+    },
+    "BASIN_RULES": {
+      "shimshal": [
+        "khurdopin",
+        [
+          "sost",
+          "passu"
+        ]
+      ],
+      "hunza_all": [
+        "shisper",
+        [
+          "chihnji",
+          "gargoh"
+        ]
+      ],
+      "shigar": [
+        "biafo",
+        [
+          "lokpar"
+        ]
+      ]
+    },
+    "EXPECTED_KM2": {
+      "hunza_all": 13900,
+      "shigar": 6900
+    },
+    "BBOX": [
+      73.5,
+      35.0,
+      77.2,
+      37.3
+    ],
+    "MIN_LAKE_KM2": 0.01,
+    "MIN_PIXELS": 12,
+    "GLACIER_MAX_DIST_M": 10000,
+    "MAX_LAKE_KM2": 20,
+    "MAX_COMPACTNESS": 25,
+    "SUPRAGLACIAL_SHARE": 0.5,
+    "RIVER_UPA_KM2": 100,
+    "RIVER_NEAR_M": 150,
+    "EXCLUDE_POINTS": {
+      "Attabad": [
+        74.8667,
+        36.3333
+      ]
+    },
+    "EXCLUDE_RADIUS_M": 1500,
+    "TIER2": {
+      "Shisper": "shisper",
+      "Khurdopin": "khurdopin",
+      "Passu": "passu"
+    },
+    "TIER2_SEARCH_M": 3000,
+    "TIER2_OVERRIDE": {},
+    "EVENT_MATCH_RADIUS_M": 3000,
+    "S2_FROM": "2017-01-01",
+    "S2_WINDOW_DAYS": 30,
+    "S2_MAX_CLOUD": 60,
+    "S2_NDWI_MIN": 0.2,
+    "S2_MIN_DETECTIONS": 2,
+    "S2_MIN_DRAINED_KM2": 0.01,
+    "UTM": "EPSG:32643",
+    "GLACIER_SOURCE": "RGI v7.0 (projects/sat-io/open-datasets/RGI/RGI_VECTOR_MERGED_V7)",
+    "GLACIER_TAG": "rgi7",
+    "GLACIER_ID": "rgi_id",
+    "CACHE_TAG": "12px_10km_upa150m",
+    "LAKE_COLS": [
+      "lake_id",
+      "name",
+      "basin",
+      "lat",
+      "lon",
+      "area_ref_km2",
+      "dam_type",
+      "glacier_id",
+      "tier2"
+    ]
+  },
+  "counts": {
+    "water_patches_near_glaciers": 1380,
+    "candidates": 1382,
+    "lakes": 552,
+    "lakes_per_basin": {
+      "hunza": 377,
+      "shigar": 98,
+      "shimshal": 77
+    },
+    "events": 17,
+    "unmatched_records": 354,
+    "positive_lake_years": 14
+  },
+  "tier2": {
+    "Shisper": "KG-HUN-363",
+    "Khurdopin": "KG-SHM-068",
+    "Passu": "KG-HUN-357"
+  },
+  "tier2_outline_validation": [
+    {
+      "lake": "Shisper",
+      "drainage": "2019-06-22",
+      "images_before": 1,
+      "images_after": 3,
+      "db_area_km2": 0.256,
+      "db_image": "2019-06-18",
+      "mapped_km2": 0.163,
+      "note": ""
+    },
+    {
+      "lake": "Shisper",
+      "drainage": "2020-05-29",
+      "images_before": 1,
+      "images_after": 0,
+      "db_area_km2": 0.278,
+      "db_image": "2020-05-28",
+      "mapped_km2": null,
+      "note": "no clear images"
+    },
+    {
+      "lake": "Shisper",
+      "drainage": "2022-05-07",
+      "images_before": 5,
+      "images_after": 3,
+      "db_area_km2": 0.325,
+      "db_image": "2022-05-02",
+      "mapped_km2": 0.116,
+      "note": ""
+    },
+    {
+      "lake": "Khurdopin",
+      "drainage": "2017-07-28",
+      "images_before": 2,
+      "images_after": 0,
+      "db_area_km2": 0.096,
+      "db_image": "2017-07-16",
+      "mapped_km2": null,
+      "note": "no clear images"
+    },
+    {
+      "lake": "Khurdopin",
+      "drainage": "2018-05-10",
+      "images_before": 1,
+      "images_after": 4,
+      "db_area_km2": NaN,
+      "db_image": "nan",
+      "mapped_km2": 0.038,
+      "note": ""
+    },
+    {
+      "lake": "Khurdopin",
+      "drainage": "2019-05-10",
+      "images_before": 3,
+      "images_after": 1,
+      "db_area_km2": 0.104,
+      "db_image": "2019-04-29",
+      "mapped_km2": 0.117,
+      "note": ""
+    }
+  ],
+  "versions": {
+    "earthengine-api": "1.7.39",
+    "geemap": "0.38.9",
+    "pandas": "2.2.3",
+    "geopandas": "1.2.0"
+  }
+}
