@@ -27,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
 import pandas as pd  # noqa: E402
 
+from karaglof.features import FEATURE_GROUPS, FEATURES  # noqa: E402
 from karaglof.rules import (  # noqa: E402
     DEFAULT_THRESHOLDS,
     assign_alert_levels,
@@ -153,34 +154,37 @@ def build_lake_area_yearly() -> list[list]:
 
 
 def build_lake_year() -> list[list]:
-    """Tier 1 model table (SPECS §3), one row per lake per year 2020-2025."""
-    header = ["lake_id", "year", "glof",
-              "area_km2_prev", "area_growth_3y", "area_growth_rate",
-              "velocity_prev", "velocity_change", "surge_flag_prev", "dh_dt",
-              "pdd_prev_summer", "heat_anomaly_prev", "rain_prev_summer", "snowmelt_onset",
-              "elev_m", "slope_dam_deg", "dist_to_glacier_m"]
+    """Tier 1 model table (SPECS §3), one row per lake per year 2020-2025, with
+    exactly the columns of karaglof.features (label + FEATURES)."""
+    header = ["lake_id", "year", "glof"] + FEATURES
     glof_years = {("KG-HUN-001", 2022), ("KG-SHM-001", 2022)}
     rows = []
     for n, (lake_id, *_rest) in enumerate(LAKES):
         for year in range(2020, 2026):
             surge = int(lake_id == "KG-HUN-001" and year >= 2021)
-            rows.append([
-                lake_id, year, int((lake_id, year) in glof_years),
-                round(0.05 + 0.04 * n + 0.01 * (year - 2020), 3),
-                round(8.0 + 6.0 * n + (22.0 if surge else 0.0), 1),
-                round(2.0 + 0.8 * n + (6.0 if surge else 0.0), 1),
-                round(30.0 + 25.0 * surge + 2.0 * n, 1),
-                round((55.0 if surge else 1.5 * n) - 1.0, 1),
-                surge,
-                round(-0.6 + 0.05 * n + (0.4 if surge else 0.0), 2),
-                int(900 + 40 * n + 15 * (year - 2020)),
-                round(0.4 + 0.1 * n + (0.9 if surge else 0.0), 1),
-                round(120.0 + 9.0 * n, 1),
-                int(140 + 3 * n + (6 if surge else 0)),
-                int(3100 + 120 * n),
-                round(18.0 + 2.5 * n, 1),
-                int(40 + 15 * n),
-            ])
+            known_velocity = year <= 2023        # ITS_LIVE ends 2022
+            values = {
+                "area_km2_prev": round(0.05 + 0.04 * n + 0.01 * (year - 2020), 3),
+                "area_growth_3y_pct": round(8.0 + 6.0 * n + (22.0 if surge else 0.0), 1),
+                "area_trend_km2_per_yr": round(0.002 + 0.001 * n + (0.02 if surge else 0.0), 4),
+                "velocity_prev": round(30.0 + 25.0 * surge + 2.0 * n, 1),
+                "velocity_change": round((55.0 if surge else 1.5 * n) - 1.0, 1),
+                "surge_ratio_prev": round(2.6 if surge else 1.0 + 0.05 * n, 2),
+                "surge_flag_prev": surge,
+                "pdd_prev_summer": int(900 + 40 * n + 15 * (year - 2020)),
+                "heat_anomaly_prev": round(0.4 + 0.1 * n + (0.9 if surge else 0.0), 1),
+                "precip_prev_summer_mm": round(120.0 + 9.0 * n, 1),
+                "snowmelt_prev_summer_mm": round(60.0 + 4.0 * n, 1),
+                "elev_m": int(3100 + 120 * n),
+                "slope_around_deg": round(18.0 + 2.5 * n, 1),
+                "dist_to_glacier_m": int(40 + 15 * n),
+                "parent_glacier_km2": round(5.0 + 3.0 * n, 1),
+            }
+            if not known_velocity:
+                for f in FEATURE_GROUPS["glacier"]:
+                    values[f] = ""
+            rows.append([lake_id, year, int((lake_id, year) in glof_years)]
+                        + [values[f] for f in FEATURES])
     return header, rows
 
 
@@ -205,7 +209,7 @@ def build_ranking() -> list[list]:
 def build_shap_top(ranking_rows: list[list]) -> list[list]:
     """Top 5 drivers per lake-year (SPECS §3), deterministic from the score."""
     templates = [
-        ("area_growth_3y", "{v:.0f}", "Lake area grew {t}% over the 3 years before this year"),
+        ("area_growth_3y_pct", "{v:.0f}", "Lake area grew {t}% over the 3 years before this year"),
         ("surge_flag_prev", "{v:.0f}", "The parent glacier was surging the year before"),
         ("velocity_change", "{v:.1f}", "Glacier flow changed by {t} m/yr before this year"),
         ("heat_anomaly_prev", "{v:.1f}", "Last summer was {t} C warmer than the long-term mean"),
@@ -268,7 +272,7 @@ def build_metrics(alerts: pd.DataFrame) -> dict:
             ],
             "ablation": {
                 "feature_group_removed": "glacier_surge",
-                "features": ["velocity_prev", "velocity_change", "surge_flag_prev", "dh_dt"],
+                "features": FEATURE_GROUPS["glacier"],
                 "pr_auc_without_group": 0.22, "pr_auc_without_group_ci95": [0.09, 0.41],
                 "delta_pr_auc": -0.09, "delta_pr_auc_ci95": [-0.19, 0.02],
                 "note": "Sample-data placeholder; the real ablation is produced by notebook 04.",

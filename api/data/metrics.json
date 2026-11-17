@@ -79,8 +79,8 @@
       "features": [
         "velocity_prev",
         "velocity_change",
-        "surge_flag_prev",
-        "dh_dt"
+        "surge_ratio_prev",
+        "surge_flag_prev"
       ],
       "pr_auc_without_group": 0.22,
       "pr_auc_without_group_ci95": [
