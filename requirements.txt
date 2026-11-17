@@ -8,6 +8,7 @@ pandas==2.2.3
 geopandas==1.0.1
 pyarrow==19.0.0
 odfpy==1.4.1   # reads the GLOF database spreadsheet (.ods) in notebook 01
+rasterio==1.4.3   # reads ITS_LIVE glacier-speed GeoTIFFs from the cloud in notebook 03
 
 # --- Models ---
 scikit-learn==1.5.2
