@@ -88,7 +88,7 @@ def weekly_rows(start: date, areas: list[float], anomalies: list[float], pdds: l
 
 def build_lake_week() -> list[list]:
     """One melt-season 2022 series per Tier 2 lake (SPECS §3 lake_week schema)."""
-    header = ["lake_id", "week_start", "area_km2_s1", "area_change_2w_pct",
+    header = ["lake_id", "week_start", "area_km2", "area_change_2w_pct",
               "t2m_anomaly_c", "pdd_7d", "rain_7d_mm", "event_in_window"]
     rows: list[list] = []
 

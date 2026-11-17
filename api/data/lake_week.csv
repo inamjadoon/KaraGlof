@@ -1,4 +1,4 @@
-lake_id,week_start,area_km2_s1,area_change_2w_pct,t2m_anomaly_c,pdd_7d,rain_7d_mm,event_in_window
+lake_id,week_start,area_km2,area_change_2w_pct,t2m_anomaly_c,pdd_7d,rain_7d_mm,event_in_window
 KG-HUN-001,2022-03-07,0.2,,0.4,12,2.1,0
 KG-HUN-001,2022-03-14,0.205,,0.6,15,1.4,0
 KG-HUN-001,2022-03-21,0.21,5.0,0.9,19,3.2,0

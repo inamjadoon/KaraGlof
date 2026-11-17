@@ -12,7 +12,7 @@ Levels:
         95th percentile with a heat anomaly above +3 deg C.
 
 `assign_alert_levels` takes a lake-week table (SPECS §3) with at least the
-columns lake_id, week_start, area_km2_s1, area_change_2w_pct and
+columns lake_id, week_start, area_km2, area_change_2w_pct and
 t2m_anomaly_c, and returns one row per lake-week with the alert level and
 human-readable reasons. Everything is computed only from that week's row and
 earlier rows — never from the future.
@@ -95,7 +95,7 @@ def assign_alert_levels(
     to that week. Returns columns lake_id, week_start, level, reasons.
     """
     df = lake_week.sort_values(["lake_id", "week_start"]).copy()
-    df["area_pct"] = df.groupby("lake_id", group_keys=False)["area_km2_s1"].transform(
+    df["area_pct"] = df.groupby("lake_id", group_keys=False)["area_km2"].transform(
         _past_only_percentile
     )
 

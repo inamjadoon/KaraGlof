@@ -24,7 +24,7 @@ def make_weeks(areas, anomalies, start="2022-04-04", lake_id="L1"):
     return pd.DataFrame({
         "lake_id": lake_id,
         "week_start": weeks,
-        "area_km2_s1": areas,
+        "area_km2": areas,
         "area_change_2w_pct": change,
         "t2m_anomaly_c": anomalies,
     })

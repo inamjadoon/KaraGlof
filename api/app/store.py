@@ -183,7 +183,7 @@ class DataStore:
             week = self.week_by_key.get((lake_id, r.week_start), None)
             rows.append({
                 "week_start": r.week_start,
-                "area_km2": float(week.area_km2_s1) if week is not None else None,
+                "area_km2": float(week.area_km2) if week is not None else None,
                 "t2m_anomaly_c": float(week.t2m_anomaly_c) if week is not None else None,
                 "level": r.level,
                 "reasons": list(r.reasons),

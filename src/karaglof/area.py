@@ -1,5 +1,8 @@
 """Lake area over time (notebook 02): yearly for all lakes, weekly for Tier 2.
 
+Weekly areas come from optical satellites (Sentinel-2 from 2017, Landsat 8/9):
+Sentinel-1 radar was tested and does not see the ice-covered Shisper lake.
+
 Earth Engine produces raw numbers per lake: water area and how many clear
 satellite looks there were. These functions turn them into the released
 tables, with the rules written down and tested here instead of in notebook
@@ -10,7 +13,7 @@ cells:
     event_response -> did the weekly area drop when a recorded outburst happened?
 
 No gap is ever filled silently (SPECS §4 check): a lake-year with too few clear
-looks gets an empty area, and a week with no usable radar image stays empty.
+looks gets an empty area, and a week with no usable clear look stays empty.
 """
 
 from __future__ import annotations
@@ -44,23 +47,23 @@ def week_start(dates) -> pd.Series:
 
 def weekly_series(acq: pd.DataFrame, lake_ids, start: str, end: str,
                   min_valid_frac: float) -> pd.DataFrame:
-    """Weekly radar area per lake: lake_id, week_start, area_km2_s1, n_acq.
+    """Weekly area per lake: lake_id, week_start, area_km2, n_obs.
 
-    `acq` has one row per radar image and lake: lake_id, date, water_km2,
-    valid_frac (share of the lake area the image covered). Images covering
-    less than `min_valid_frac` are dropped; the rest are combined per week
-    with the median, which resists a single noisy image. Every week from
-    `start` to `end` appears; weeks without a usable image stay empty.
+    `acq` has one row per satellite look and lake: lake_id, date, water_km2,
+    valid_frac (share of the lake zone seen clearly). Looks covering less
+    than `min_valid_frac` are dropped; the rest are combined per week
+    with the median, which resists a single noisy look. Every week from
+    `start` to `end` appears; weeks without a usable look stay empty.
     """
     a = acq[acq["valid_frac"] >= min_valid_frac].copy()
     a["week_start"] = week_start(a["date"]).values
     agg = a.groupby(["lake_id", "week_start"]).agg(
-        area_km2_s1=("water_km2", "median"), n_acq=("water_km2", "size"))
+        area_km2=("water_km2", "median"), n_obs=("water_km2", "size"))
     weeks = pd.date_range(week_start([start]).iloc[0], end, freq="W-MON")
     grid = pd.MultiIndex.from_product([list(lake_ids), weeks], names=["lake_id", "week_start"])
     out = agg.reindex(grid)
-    out["n_acq"] = out["n_acq"].fillna(0).astype(int)
-    out["area_km2_s1"] = out["area_km2_s1"].round(4)
+    out["n_obs"] = out["n_obs"].fillna(0).astype(int)
+    out["area_km2"] = out["area_km2"].round(4)
     return out.reset_index()
 
 
@@ -69,7 +72,7 @@ def event_response(weekly: pd.DataFrame, events: pd.DataFrame, weeks: int) -> pd
 
     The week containing the drainage date is left out of both windows. A
     real outburst should show a clear drop (negative change_pct). This is a
-    data check of the radar record, not a tuning step.
+    data check of the weekly record, not a tuning step.
     """
     rows = []
     for e in events.itertuples(index=False):
@@ -78,12 +81,12 @@ def event_response(weekly: pd.DataFrame, events: pd.DataFrame, weeks: int) -> pd
         span = pd.Timedelta(days=7 * int(weeks))
         before = w[(w["week_start"] < event_week) & (w["week_start"] >= event_week - span)]
         after = w[(w["week_start"] > event_week) & (w["week_start"] <= event_week + span)]
-        b, a = before["area_km2_s1"].mean(), after["area_km2_s1"].mean()
+        b, a = before["area_km2"].mean(), after["area_km2"].mean()
         change = (a / b - 1) * 100 if pd.notna(a) and pd.notna(b) and b > 0 else np.nan
         rows.append({
             "event_id": e.event_id, "lake_id": e.lake_id, "date": e.date,
-            "weeks_with_data_before": int(before["area_km2_s1"].notna().sum()),
-            "weeks_with_data_after": int(after["area_km2_s1"].notna().sum()),
+            "weeks_with_data_before": int(before["area_km2"].notna().sum()),
+            "weeks_with_data_after": int(after["area_km2"].notna().sum()),
             "before_km2": round(b, 4) if pd.notna(b) else np.nan,
             "after_km2": round(a, 4) if pd.notna(a) else np.nan,
             "change_pct": round(change, 1) if pd.notna(change) else np.nan,
