@@ -1,0 +1,238 @@
+{
+  "notebook": "02_lake_area",
+  "run_utc": "2026-11-17T14:09:14+00:00",
+  "sources": {
+    "yearly": "Landsat 5/7/8/9 Collection 2 Level 2 (LANDSAT/L*0*/C02/T1_L2)",
+    "weekly": "Landsat 8/9 C2 L2 and Sentinel-2 L1C from 2017 with s2cloudless (COPERNICUS/S2_HARMONIZED, S2_CLOUD_PROBABILITY)",
+    "radar_test": "Sentinel-1 GRD IW VV (COPERNICUS/S1_GRD), pre-2022 outbursts only",
+    "lakes": "data/labels (notebook 01, v0.2)"
+  },
+  "parameters": {
+    "REPO_URL": "https://github.com/inamjadoon/KaraGlof.git",
+    "EXPORT_FOLDER": "KaraGlof_exports",
+    "YEARS": [
+      2000,
+      2001,
+      2002,
+      2003,
+      2004,
+      2005,
+      2006,
+      2007,
+      2008,
+      2009,
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "SEASON": [
+      "05-01",
+      "11-01"
+    ],
+    "LAKE_BUFFER_M": 60,
+    "TIER2_BUFFER_M": 300,
+    "NDWI_MIN": 0.1,
+    "MIN_DETECTIONS": 2,
+    "MIN_CLEAR_OBS": 3,
+    "WEEK_START": "2015-01-01",
+    "WEEK_END": "2026-01-01",
+    "S2_FROM": "2017-01-01",
+    "S2_NDWI_MIN": 0.2,
+    "S2_CLOUD_PROB_MAX": 40,
+    "OPT_MIN_CLEAR_FRAC": 0.8,
+    "EVENT_WINDOW_WEEKS": 4,
+    "S1_SPECKLE_M": 30,
+    "UTM": "EPSG:32643",
+    "TIER2_IDS": {
+      "Passu": "KG-HUN-357",
+      "Shisper": "KG-HUN-363",
+      "Khurdopin": "KG-SHM-068"
+    },
+    "LANDSAT": [
+      [
+        "LANDSAT/LT05/C02/T1_L2",
+        "SR_B2",
+        "SR_B4"
+      ],
+      [
+        "LANDSAT/LE07/C02/T1_L2",
+        "SR_B2",
+        "SR_B4"
+      ],
+      [
+        "LANDSAT/LC08/C02/T1_L2",
+        "SR_B3",
+        "SR_B5"
+      ],
+      [
+        "LANDSAT/LC09/C02/T1_L2",
+        "SR_B3",
+        "SR_B5"
+      ]
+    ],
+    "TAG": "ndwi0.1_det2_buf60-300",
+    "CAL": {
+      "Shisper": [
+        "2019-06-22",
+        "2020-05-29"
+      ],
+      "Khurdopin": [
+        "2017-07-28",
+        "2018-05-10",
+        "2019-05-10"
+      ]
+    },
+    "OPT_TAG": "ls0.1_s20.2_cp40_buf300"
+  },
+  "counts": {
+    "landsat_images_per_year": {
+      "2000": 73,
+      "2001": 56,
+      "2002": 43,
+      "2003": 43,
+      "2004": 84,
+      "2005": 74,
+      "2006": 89,
+      "2007": 74,
+      "2008": 106,
+      "2009": 160,
+      "2010": 131,
+      "2011": 124,
+      "2012": 79,
+      "2013": 173,
+      "2014": 188,
+      "2015": 180,
+      "2016": 189,
+      "2017": 194,
+      "2018": 197,
+      "2019": 200,
+      "2020": 194,
+      "2021": 192,
+      "2022": 285,
+      "2023": 286,
+      "2024": 205,
+      "2025": 194
+    },
+    "lake_years": 14352,
+    "lake_years_with_area": 14043,
+    "optical_looks": 10419,
+    "usable_looks": 1849,
+    "weeks_with_area": 1103
+  },
+  "radar_test_means": [
+    {
+      "lake": "Khurdopin",
+      "window": "lake empty (after)",
+      "mean_dB": -11.15,
+      "dark18": 0.08,
+      "dark15": 0.13
+    },
+    {
+      "lake": "Khurdopin",
+      "window": "lake full (before)",
+      "mean_dB": -13.1,
+      "dark18": 0.13,
+      "dark15": 0.35
+    },
+    {
+      "lake": "Shisper",
+      "window": "lake empty (after)",
+      "mean_dB": -7.9,
+      "dark18": 0.0,
+      "dark15": 0.0
+    },
+    {
+      "lake": "Shisper",
+      "window": "lake full (before)",
+      "mean_dB": -9.41,
+      "dark18": 0.01,
+      "dark15": 0.06
+    }
+  ],
+  "event_response": [
+    {
+      "event_id": "EV-2017-KG-SHM-068",
+      "lake_id": "KG-SHM-068",
+      "date": "2017-07-28",
+      "weeks_with_data_before": 1,
+      "weeks_with_data_after": 2,
+      "before_km2": 0.0126,
+      "after_km2": 0.0529,
+      "change_pct": 319.8,
+      "lake": "Khurdopin"
+    },
+    {
+      "event_id": "EV-2018-KG-SHM-068-3",
+      "lake_id": "KG-SHM-068",
+      "date": "2018-05-10",
+      "weeks_with_data_before": 4,
+      "weeks_with_data_after": 3,
+      "before_km2": 0.0197,
+      "after_km2": 0.0001,
+      "change_pct": -99.3,
+      "lake": "Khurdopin"
+    },
+    {
+      "event_id": "EV-2019-KG-SHM-068",
+      "lake_id": "KG-SHM-068",
+      "date": "2019-05-10",
+      "weeks_with_data_before": 4,
+      "weeks_with_data_after": 4,
+      "before_km2": 0.0839,
+      "after_km2": 0.0006,
+      "change_pct": -99.2,
+      "lake": "Khurdopin"
+    },
+    {
+      "event_id": "EV-2019-KG-HUN-363",
+      "lake_id": "KG-HUN-363",
+      "date": "2019-06-22",
+      "weeks_with_data_before": 1,
+      "weeks_with_data_after": 3,
+      "before_km2": 0.2087,
+      "after_km2": 0.0094,
+      "change_pct": -95.5,
+      "lake": "Shisper"
+    },
+    {
+      "event_id": "EV-2020-KG-HUN-363-2",
+      "lake_id": "KG-HUN-363",
+      "date": "2020-05-29",
+      "weeks_with_data_before": 2,
+      "weeks_with_data_after": 1,
+      "before_km2": 0.1216,
+      "after_km2": 0.0,
+      "change_pct": -100.0,
+      "lake": "Shisper"
+    },
+    {
+      "event_id": "EV-2022-KG-HUN-363",
+      "lake_id": "KG-HUN-363",
+      "date": "2022-05-07",
+      "weeks_with_data_before": 3,
+      "weeks_with_data_after": 3,
+      "before_km2": 0.0998,
+      "after_km2": 0.0275,
+      "change_pct": -72.4,
+      "lake": "Shisper"
+    }
+  ],
+  "versions": {
+    "earthengine-api": "1.7.39",
+    "geemap": "0.38.9",
+    "pandas": "2.2.3"
+  }
+}

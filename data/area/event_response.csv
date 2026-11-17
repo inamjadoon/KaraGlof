@@ -1,0 +1,7 @@
+event_id,lake_id,date,weeks_with_data_before,weeks_with_data_after,before_km2,after_km2,change_pct,lake
+EV-2017-KG-SHM-068,KG-SHM-068,7/28/2017,1,2,0.0126,0.0529,319.8,Khurdopin
+EV-2018-KG-SHM-068-3,KG-SHM-068,5/10/2018,4,3,0.0197,0.0001,-99.3,Khurdopin
+EV-2019-KG-SHM-068,KG-SHM-068,5/10/2019,4,4,0.0839,0.0006,-99.2,Khurdopin
+EV-2019-KG-HUN-363,KG-HUN-363,6/22/2019,1,3,0.2087,0.0094,-95.5,Shisper
+EV-2020-KG-HUN-363-2,KG-HUN-363,5/29/2020,2,1,0.1216,0,-100,Shisper
+EV-2022-KG-HUN-363,KG-HUN-363,5/7/2022,3,3,0.0998,0.0275,-72.4,Shisper
