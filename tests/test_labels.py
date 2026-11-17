@@ -132,6 +132,28 @@ def test_check_labels_passes_on_clean_tables():
     assert labels.check_labels(lakes, ev, unmatched, ["Shisper", "Passu", "Khurdopin"]) == []
 
 
+def test_add_news_events_ids_certainty_and_unknown_lakes():
+    events = labels.build_events_table(matched_events())
+    lakes = lake_table()
+    news = pd.DataFrame({
+        "lake_name": ["Shisper", "Shisper", "Khurdopin"],
+        "date": ["2025-07", "2025-08-10", "2018-06"],
+        "source": ["https://a", "https://b", "https://c"],
+        "notes": ["", "", ""],
+    })
+    out = labels.add_news_events(events, news, lakes)
+    new = out[out["source"].str.startswith("news:")].set_index("date")
+    assert new.loc["2025-07-01", "date_certainty"] == "month"
+    assert new.loc["2025-08-10", "date_certainty"] == "day"
+    assert new.loc["2025-07-01", "event_id"] == "EV-2025-KG-HUN-001"
+    assert new.loc["2025-08-10", "event_id"] == "EV-2025-KG-HUN-001-2"
+    # Khurdopin already has two 2018 events: the news one becomes -3, old IDs unchanged
+    assert new.loc["2018-06-01", "event_id"] == "EV-2018-KG-SHM-001-3"
+    assert set(events["event_id"]) <= set(out["event_id"])
+    with pytest.raises(ValueError):
+        labels.add_news_events(events, news.assign(lake_name="Nowhere"), lakes)
+
+
 def test_check_labels_catches_problems():
     ev = labels.build_events_table(matched_events())
     unmatched = pd.DataFrame({"exclude_reason": [""]})

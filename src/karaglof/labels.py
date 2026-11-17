@@ -14,6 +14,7 @@ is unit-tested and the notebook only calls these functions:
     assign_lake_ids     -> stable IDs like KG-HUN-001
     match_events        -> attach each event to the nearest lake within a radius
     build_events_table  -> final events.csv rows with stable event IDs
+    add_news_events     -> events after the database's coverage, from news reports
     check_labels        -> Gate 1 checks (every event has a lake + date, or a reason)
 """
 
@@ -242,6 +243,40 @@ def build_events_table(matched: pd.DataFrame, source: str = GLOF_DB_SOURCE) -> p
         "source": [f"{source}, record {i}" for i in ev["db_id"]],
         "notes": notes,
     }).sort_values(["date", "lake_id"]).reset_index(drop=True)
+
+
+def add_news_events(events: pd.DataFrame, news: pd.DataFrame, lakes: pd.DataFrame) -> pd.DataFrame:
+    """Append news-reported events (PRD §2: recent events missing from the
+    inventories, marked "news") to the events table.
+
+    `news` comes from data/manual/events_news.csv: lake_name, date
+    ("YYYY", "YYYY-MM" or "YYYY-MM-DD"; the certainty follows from the
+    format), source (URL) and notes. Only named lakes can be used, so a
+    report is always tied to a lake by name, never by guesswork. Existing
+    event IDs never change: a news event gets the next free number for its
+    lake and year.
+    """
+    lake_of = dict(zip(lakes["name"].fillna(""), lakes["lake_id"], strict=True))
+    unknown = sorted(set(news["lake_name"]) - set(lake_of))
+    if unknown:
+        raise ValueError(f"news events name lakes not in the lake table: {unknown}")
+    out = events.copy()
+    for r in news.itertuples(index=False):
+        date, certainty = parse_partial_date(str(r.date))
+        if date is None:
+            raise ValueError(f"unreadable news date {r.date!r}")
+        lake_id = lake_of[r.lake_name]
+        base = f"EV-{date.year}-{lake_id}"
+        taken = out["event_id"].str.fullmatch(rf"{re.escape(base)}(-\d+)?").sum()
+        out = pd.concat([out, pd.DataFrame([{
+            "event_id": base if taken == 0 else f"{base}-{taken + 1}",
+            "lake_id": lake_id,
+            "date": date.strftime("%Y-%m-%d"),
+            "date_certainty": certainty,
+            "source": f"news: {r.source}",
+            "notes": r.notes,
+        }])], ignore_index=True)
+    return out.sort_values(["date", "lake_id"]).reset_index(drop=True)
 
 
 def check_labels(lakes: pd.DataFrame, events: pd.DataFrame, unmatched: pd.DataFrame,
