@@ -5,11 +5,13 @@ of events. Starting thresholds (SPECS §5) are tuned once on 2015-2021 and
 then frozen; they are never adjusted after looking at the Shisper 2022 replay.
 
 Levels:
+    no_data — no clear satellite look that week (cloud): never called "green";
     green — none of the amber conditions hold;
     amber — area grew >15% in 2 weeks, or area above the lake's 90th
         percentile and 7-day temperature anomaly above +2 deg C;
-    red   — amber conditions hold two weeks in a row, or area above the
-        95th percentile with a heat anomaly above +3 deg C.
+    red   — amber conditions hold in two consecutive *measured* weeks (a
+        cloudy week in between does not reset it), or area above the 95th
+        percentile with a heat anomaly above +3 deg C.
 
 `assign_alert_levels` takes a lake-week table (SPECS §3) with at least the
 columns lake_id, week_start, area_km2, area_change_2w_pct and
@@ -28,6 +30,7 @@ import pandas as pd
 LEVEL_GREEN = "green"
 LEVEL_AMBER = "amber"
 LEVEL_RED = "red"
+LEVEL_NODATA = "no_data"
 
 
 @dataclass(frozen=True)
@@ -104,13 +107,15 @@ def assign_alert_levels(
         df["t2m_anomaly_c"] > thresholds.anomaly_amber_c
     )
     df["_amber_now"] = df["_grew_fast"] | df["_hot_and_high"]
-    df["_amber_streak"] = (
-        df.groupby("lake_id")["_amber_now"]
+    observed = df["area_km2"].notna()
+    streak = (
+        df[observed].groupby("lake_id")["_amber_now"]
         .rolling(thresholds.red_weeks_in_a_row, min_periods=thresholds.red_weeks_in_a_row)
         .sum()
         .reset_index(level=0, drop=True)
         >= thresholds.red_weeks_in_a_row
     )
+    df["_amber_streak"] = streak.reindex(df.index, fill_value=False)
     df["_red_direct"] = (df["area_pct"] >= thresholds.percentile_red) & (
         df["t2m_anomaly_c"] > thresholds.anomaly_red_c
     )
@@ -120,6 +125,8 @@ def assign_alert_levels(
     df.loc[df["_red_direct"] | df["_amber_streak"], "level"] = LEVEL_RED
     df["reasons"] = df.apply(_reasons, axis=1, args=(thresholds,))
     df.loc[df["level"] == LEVEL_GREEN, "reasons"] = ""
+    df.loc[~observed, "level"] = LEVEL_NODATA
+    df.loc[~observed, "reasons"] = "no clear satellite look this week"
 
     return df[["lake_id", "week_start", "level", "reasons"]].reset_index(drop=True)
 
@@ -145,8 +152,11 @@ def lead_time_days(alerts: pd.DataFrame, event_date: str) -> int | None:
 
 
 def _warning_run(alerts: pd.DataFrame, event: pd.Timestamp) -> list[pd.Timestamp]:
-    """Week starts of the warning run leading into `event` (empty if none)."""
-    a = alerts.assign(week=pd.to_datetime(alerts["week_start"]))
+    """Week starts of the warning run leading into `event` (empty if none).
+    Weeks without data are skipped: a cloudy week neither starts, extends nor
+    breaks a run."""
+    a = alerts[alerts["level"] != LEVEL_NODATA]
+    a = a.assign(week=pd.to_datetime(a["week_start"]))
     a = a[a["week"] <= event].sort_values("week")
     weeks = a["week"].tolist()
     raised = _raised(a).tolist()
@@ -172,3 +182,78 @@ def count_false_alarms(alerts: pd.DataFrame, event_dates: list[str]) -> int:
         explained.update(_warning_run(alerts, pd.Timestamp(d)))
     raised_weeks = pd.to_datetime(alerts.loc[_raised(alerts), "week_start"])
     return sum(week not in explained for week in raised_weeks)
+
+
+def evaluate(alerts: pd.DataFrame, events: pd.DataFrame, min_lead_days: int = 7) -> tuple[
+        pd.DataFrame, pd.DataFrame]:
+    """Score alert levels against recorded outbursts (SPECS §5).
+
+    Returns (per_event, per_season):
+    * per_event: one row per **day-dated** outburst: lake_id, date,
+      lead_time_days, detected (warning at least `min_lead_days` before).
+      Outbursts known only to the month or year cannot be scored for lead time.
+    * per_season: per lake and year: raised (amber/red) weeks and false alarms
+      = raised weeks not in a warning run leading into a day-dated outburst.
+      Weeks within 14 days before an outburst known only to the month are
+      neither hits nor false alarms (we cannot tell), so they are left out.
+    """
+    rows = []
+    for e in events[events["date_certainty"] == "day"].itertuples(index=False):
+        a = alerts[alerts["lake_id"] == e.lake_id]
+        lead = lead_time_days(a, e.date)
+        rows.append({"lake_id": e.lake_id, "date": e.date, "lead_time_days": lead,
+                     "detected": lead is not None and lead >= min_lead_days})
+    per_event = pd.DataFrame(rows, columns=["lake_id", "date", "lead_time_days", "detected"])
+
+    out = []
+    for lake_id, a in alerts.groupby("lake_id"):
+        ev = events[events["lake_id"] == lake_id]
+        explained = set()
+        for d in ev.loc[ev["date_certainty"] == "day", "date"]:
+            explained.update(_warning_run(a, pd.Timestamp(d)))
+        weeks = pd.to_datetime(a["week_start"])
+        unknown = pd.Series(False, index=a.index)
+        for d in ev.loc[ev["date_certainty"] == "month", "date"]:
+            start = pd.Timestamp(d)
+            end = start + pd.offsets.MonthEnd(0)
+            unknown |= (weeks <= end) & ((start - weeks).dt.days <= EVENT_WINDOW_DAYS - 1)
+        raised = _raised(a)
+        false = raised & ~weeks.isin(explained) & ~unknown
+        out.append(pd.DataFrame({"lake_id": lake_id, "year": weeks.dt.year,
+                                 "raised": raised, "false_alarm": false}))
+    per_season = (pd.concat(out).groupby(["lake_id", "year"])
+                  .agg(raised_weeks=("raised", "sum"), false_alarms=("false_alarm", "sum"))
+                  .reset_index())
+    return per_event, per_season
+
+
+def threshold_grid() -> list[Thresholds]:
+    """The 24 threshold sets tried on 2015-2021: 2-week growth 15/25/50/100%,
+    area percentile 90/80, heat anomaly 2/1/3 deg C (red = +1 deg C and p95).
+    Ordered by how many values differ from the SPECS starting point, so the
+    starting point comes first and wins any tie."""
+    d = DEFAULT_THRESHOLDS
+    grid = [Thresholds(growth_2w_pct=g, percentile_amber=p, anomaly_amber_c=a, anomaly_red_c=a + 1)
+            for g in (15.0, 25.0, 50.0, 100.0) for p in (90.0, 80.0) for a in (2.0, 1.0, 3.0)]
+    changes = [(t.growth_2w_pct != d.growth_2w_pct) + (t.percentile_amber != d.percentile_amber)
+               + (t.anomaly_amber_c != d.anomaly_amber_c) for t in grid]
+    return [t for _, t in sorted(zip(changes, grid, strict=True), key=lambda x: x[0])]
+
+
+def tune(lake_week: pd.DataFrame, events: pd.DataFrame, grid: list[Thresholds],
+         min_lead_days: int = 7) -> tuple[Thresholds, pd.DataFrame]:
+    """Pick the thresholds, by a rule fixed before looking at any result:
+    1) most day-dated outbursts warned at least `min_lead_days` ahead,
+    2) then fewest false alarms, 3) then closest to the starting point
+    (grid order). Pass only the tuning years (2015-2021) in both tables."""
+    rows = []
+    for order, th in enumerate(grid):
+        per_event, per_season = evaluate(assign_alert_levels(lake_week, th), events, min_lead_days)
+        rows.append({"order": order, **th.__dict__,
+                     "detected": int(per_event["detected"].sum()),
+                     "outbursts": len(per_event),
+                     "false_alarms": int(per_season["false_alarms"].sum()),
+                     "mean_lead_days": per_event["lead_time_days"].dropna().mean()})
+    table = pd.DataFrame(rows).sort_values(["detected", "false_alarms", "order"],
+                                           ascending=[False, True, True]).reset_index(drop=True)
+    return grid[int(table.loc[0, "order"])], table
