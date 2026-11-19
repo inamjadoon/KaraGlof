@@ -14,7 +14,8 @@ LAKES = pd.DataFrame({"lake_id": ["A", "B"]})
 def sources():
     src_years = range(1980, 2006)
     rng = np.random.default_rng(0)
-    area = pd.DataFrame([{"lake_id": lid, "year": y, "area_km2": float(rng.uniform(0.02, 0.3))}
+    area = pd.DataFrame([{"lake_id": lid, "year": y, "area_km2": float(rng.uniform(0.02, 0.3)),
+                          "n_clear_obs": 5, "filled": False}   # int and bool, like real data
                          for lid in ["A", "B"] for y in range(1994, 2006)])
     velocity = pd.DataFrame([{"lake_id": lid, "year": y, "v_m_per_yr": float(rng.uniform(20, 60))}
                              for lid in ["A", "B"] for y in range(1992, 2006)])

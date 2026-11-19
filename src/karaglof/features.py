@@ -52,7 +52,7 @@ DATA_DICTIONARY = {
                            "years Y-4..Y-1"),
     "area_trend_km2_per_yr": ("Linear trend of lake area over the 5 previous years", "km²/year",
                               "Landsat (notebook 02)", "years Y-5..Y-1"),
-    "velocity_prev": ("Median speed of the parent glacier near the lake", "m/year",
+    "velocity_prev": ("Speed of the fastest 10% of glacier ice within 3 km of the lake", "m/year",
                       "ITS_LIVE v2 annual mosaics", "year Y-1"),
     "velocity_change": ("Change of that glacier speed from Y-2 to Y-1", "m/year",
                         "ITS_LIVE v2 annual mosaics", "years Y-2..Y-1"),
@@ -121,7 +121,9 @@ def lake_features(area: pd.DataFrame, lake_ids, years) -> pd.DataFrame:
 
 def glacier_features(velocity: pd.DataFrame, lake_ids, years, surge_factor: float = 2.0,
                      baseline_years: int = 5, min_baseline: int = 3) -> pd.DataFrame:
-    """From glacier speed near each lake (lake_id, year, v_m_per_yr):
+    """From glacier speed near each lake (lake_id, year, v_m_per_yr = speed of
+    the fastest 10% of glacier ice within 3 km of the lake, so a surging dam
+    glacier is not averaged away by slower neighbouring ice):
 
     velocity_prev     speed in year Y-1
     velocity_change   speed change from Y-2 to Y-1
@@ -197,6 +199,7 @@ def check_no_future_leak(build, sources: dict[str, pd.DataFrame], year: int,
             future = df["year"] >= year
             for col in df.columns:
                 if col not in ("lake_id", "year") and pd.api.types.is_numeric_dtype(df[col]):
+                    df[col] = df[col].astype(float)       # int/bool columns can hold the noise
                     df.loc[future, col] = rng.normal(1000, 500, int(future.sum()))
         scrambled[name] = df
     after = build(**scrambled)
