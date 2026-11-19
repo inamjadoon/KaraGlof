@@ -1,0 +1,10 @@
+{
+  "scored_utc": "2026-11-19T14:34:46+00:00",
+  "lightgbm_params": {
+    "num_leaves": 7,
+    "min_child_samples": 10,
+    "n_estimators": 100
+  },
+  "train_years": "2000-2019",
+  "test_years": "2020-2025"
+}
