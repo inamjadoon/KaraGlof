@@ -1,0 +1,19 @@
+column,meaning,unit,source,time_rule
+lake_id,Lake identifier from notebook 01,-,notebook 01,key
+year,Year the row describes,year,-,key
+glof,1 if a recorded outburst happened at the lake in this year,0/1,GLOF database v4.2 + news reports,"label, never a feature"
+area_km2_prev,Lake area in the previous melt season,km²,Landsat (notebook 02),year Y-1
+area_growth_3y_pct,Change of lake area from Y-4 to Y-1,%,Landsat (notebook 02),years Y-4..Y-1
+area_trend_km2_per_yr,Linear trend of lake area over the 5 previous years,km²/year,Landsat (notebook 02),years Y-5..Y-1
+velocity_prev,Speed of the fastest 10% of glacier ice within 3 km of the lake,m/year,ITS_LIVE v2 annual mosaics,year Y-1
+velocity_change,Change of that glacier speed from Y-2 to Y-1,m/year,ITS_LIVE v2 annual mosaics,years Y-2..Y-1
+surge_ratio_prev,Glacier speed in Y-1 divided by its median over the 5 years before,ratio,ITS_LIVE v2 annual mosaics,years Y-6..Y-1
+surge_flag_prev,1 if surge_ratio_prev >= 2 (the glacier was surging),0/1,ITS_LIVE v2 annual mosaics,years Y-6..Y-1
+pdd_prev_summer,"Positive degree-days, May-September of the previous year",°C·day,ERA5-Land daily,year Y-1
+heat_anomaly_prev,Mean May-September temperature of Y-1 minus its 1980-1999 mean,°C,ERA5-Land daily,year Y-1 (baseline before 2000)
+precip_prev_summer_mm,"Precipitation, May-September of the previous year",mm,ERA5-Land daily,year Y-1
+snowmelt_prev_summer_mm,"Snowmelt, May-September of the previous year",mm w.e.,ERA5-Land daily,year Y-1
+elev_m,Mean elevation of the lake surface,m,NASADEM (2000 SRTM),static
+slope_around_deg,Mean terrain slope in a 300 m ring around the lake,°,NASADEM (2000 SRTM),static
+dist_to_glacier_m,Distance from the lake to its parent glacier outline,m,RGI v7 (~2000 outlines),static
+parent_glacier_km2,Area of the parent glacier,km²,RGI v7 (~2000 outlines),static
