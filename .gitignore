@@ -19,6 +19,8 @@ data/interim/
 data/processed/
 *.parquet
 !api/data/**/*.parquet
+# the frozen model tables from notebook 03 are small and must be in the repo
+!data/features/*.parquet
 
 # --- Secrets and environments ---
 .env
