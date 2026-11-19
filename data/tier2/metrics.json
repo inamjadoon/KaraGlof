@@ -1,0 +1,261 @@
+{
+  "data_version": "data-v1",
+  "model_version": "model-1.0.0",
+  "tier1": {
+    "split": {
+      "train": [
+        2000,
+        2017
+      ],
+      "validation": [
+        2018,
+        2019
+      ],
+      "test": [
+        2020,
+        2025
+      ]
+    },
+    "test_scored_once": true,
+    "test_scored_utc": "2026-11-19T14:34:46+00:00",
+    "positives": {
+      "test": 5,
+      "train": 7,
+      "validation": 3
+    },
+    "no_skill_pr_auc": 0.0015096618357487923,
+    "lightgbm_params": {
+      "num_leaves": 7,
+      "min_child_samples": 10,
+      "n_estimators": 100
+    },
+    "models": [
+      {
+        "name": "logistic_baseline",
+        "pr_auc": 0.33589087809036655,
+        "pr_auc_ci95": [
+          0.043478260869565216,
+          0.4443106070074574
+        ],
+        "recall_at_top10": 0.8,
+        "recall_at_top10_ci95": [
+          0.75,
+          1.0
+        ],
+        "brier": 0.013143061006882562,
+        "brier_ci95": [
+          0.008103523043767331,
+          0.01926870518648011
+        ]
+      },
+      {
+        "name": "random_forest",
+        "pr_auc": 0.7555555555555555,
+        "pr_auc_ci95": [
+          0.7019230769230769,
+          1.0
+        ],
+        "recall_at_top10": 1.0,
+        "recall_at_top10_ci95": [
+          1.0,
+          1.0
+        ],
+        "brier": 0.000931256923151741,
+        "brier_ci95": [
+          7.279313429391759e-06,
+          0.0024417156633692936
+        ]
+      },
+      {
+        "name": "lightgbm",
+        "pr_auc": 0.4778711484593837,
+        "pr_auc_ci95": [
+          0.0625,
+          0.6791666666666667
+        ],
+        "recall_at_top10": 1.0,
+        "recall_at_top10_ci95": [
+          1.0,
+          1.0
+        ],
+        "brier": 0.002206338492642356,
+        "brier_ci95": [
+          0.0002768150322647805,
+          0.004669611609978128
+        ]
+      }
+    ],
+    "ablation": {
+      "feature_group_removed": "glacier",
+      "features": [
+        "velocity_prev",
+        "velocity_change",
+        "surge_ratio_prev",
+        "surge_flag_prev"
+      ],
+      "pr_auc_without_group": 0.2306916612798966,
+      "pr_auc_without_group_ci95": [
+        0.125,
+        0.5011904761904762
+      ],
+      "delta_pr_auc": 0.24717948717948712,
+      "delta_pr_auc_ci95": [
+        -0.0625,
+        0.32307692307692304
+      ],
+      "note": "Paired bootstrap over lakes; few test floods, so the interval is wide."
+    },
+    "event_ranks": [
+      {
+        "name": "Shisper",
+        "year": 2020,
+        "rank": 1,
+        "lakes_that_year": 552
+      },
+      {
+        "name": "Shisper",
+        "year": 2021,
+        "rank": 1,
+        "lakes_that_year": 552
+      },
+      {
+        "name": "Shisper",
+        "year": 2022,
+        "rank": 1,
+        "lakes_that_year": 552
+      },
+      {
+        "name": "Shisper",
+        "year": 2025,
+        "rank": 2,
+        "lakes_that_year": 552
+      },
+      {
+        "name": "Khurdopin",
+        "year": 2021,
+        "rank": 2,
+        "lakes_that_year": 552
+      }
+    ],
+    "leave_one_lake_out": [
+      {
+        "lake_left_out": "Shisper",
+        "year": 2020,
+        "rank_without_seeing_lake": 538,
+        "rank_full_model": 1,
+        "lakes_that_year": 552
+      },
+      {
+        "lake_left_out": "Shisper",
+        "year": 2021,
+        "rank_without_seeing_lake": 73,
+        "rank_full_model": 1,
+        "lakes_that_year": 552
+      },
+      {
+        "lake_left_out": "Shisper",
+        "year": 2022,
+        "rank_without_seeing_lake": 407,
+        "rank_full_model": 1,
+        "lakes_that_year": 552
+      },
+      {
+        "lake_left_out": "Shisper",
+        "year": 2025,
+        "rank_without_seeing_lake": 91,
+        "rank_full_model": 2,
+        "lakes_that_year": 552
+      },
+      {
+        "lake_left_out": "Khurdopin",
+        "year": 2021,
+        "rank_without_seeing_lake": 393,
+        "rank_full_model": 2,
+        "lakes_that_year": 552
+      }
+    ]
+  },
+  "tier2": {
+    "thresholds": {
+      "growth_2w_pct": 25.0,
+      "percentile_amber": 90.0,
+      "anomaly_amber_c": 3.0,
+      "percentile_red": 95.0,
+      "anomaly_red_c": 4.0,
+      "red_weeks_in_a_row": 2
+    },
+    "thresholds_frozen_before_replay": true,
+    "frozen_utc": "2026-11-19T15:30:48+00:00",
+    "tuned_on": "2015-2021",
+    "min_lead_days": 7,
+    "replay_2022": {
+      "lake_id": "KG-HUN-363",
+      "event_date": "2022-05-07",
+      "lead_time_days": null,
+      "warned_at_least_7_days": false
+    },
+    "false_alarms_per_lake_season": {
+      "2015-2021": 8.19,
+      "2022-2025": 11.75
+    },
+    "weeks_with_data_share": 0.640534262485482,
+    "cases": [
+      {
+        "case_id": "khurdopin-2017",
+        "lake_id": "KG-SHM-068",
+        "event_date": "2017-07-28",
+        "lead_time_days": null,
+        "false_alarms": 8,
+        "period": "tuning 2015-2021 (in-sample)"
+      },
+      {
+        "case_id": "khurdopin-2018",
+        "lake_id": "KG-SHM-068",
+        "event_date": "2018-05-10",
+        "lead_time_days": null,
+        "false_alarms": 15,
+        "period": "tuning 2015-2021 (in-sample)"
+      },
+      {
+        "case_id": "khurdopin-2019",
+        "lake_id": "KG-SHM-068",
+        "event_date": "2019-05-10",
+        "lead_time_days": 11,
+        "false_alarms": 16,
+        "period": "tuning 2015-2021 (in-sample)"
+      },
+      {
+        "case_id": "shisper-2019",
+        "lake_id": "KG-HUN-363",
+        "event_date": "2019-06-22",
+        "lead_time_days": null,
+        "false_alarms": 11,
+        "period": "tuning 2015-2021 (in-sample)"
+      },
+      {
+        "case_id": "shisper-2020",
+        "lake_id": "KG-HUN-363",
+        "event_date": "2020-05-29",
+        "lead_time_days": 11,
+        "false_alarms": 10,
+        "period": "tuning 2015-2021 (in-sample)"
+      },
+      {
+        "case_id": "shisper-2022",
+        "lake_id": "KG-HUN-363",
+        "event_date": "2022-05-07",
+        "lead_time_days": null,
+        "false_alarms": 10,
+        "period": "REPLAY 2022 (frozen)"
+      },
+      {
+        "case_id": "shisper-2025",
+        "lake_id": "KG-HUN-363",
+        "event_date": "2025-08-10",
+        "lead_time_days": null,
+        "false_alarms": 6,
+        "period": "after freeze 2023-2025 (frozen)"
+      }
+    ]
+  }
+}

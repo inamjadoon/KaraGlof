@@ -1,0 +1,14 @@
+{
+  "frozen_utc": "2026-11-19T15:30:48+00:00",
+  "thresholds": {
+    "growth_2w_pct": 25.0,
+    "percentile_amber": 90.0,
+    "anomaly_amber_c": 3.0,
+    "percentile_red": 95.0,
+    "anomaly_red_c": 4.0,
+    "red_weeks_in_a_row": 2
+  },
+  "tuned_on": "2015-2021",
+  "rule": "most outbursts warned >= 7 days ahead, then fewest false alarms, then closest to the SPECS starting values",
+  "min_lead_days": 7
+}
